@@ -35,7 +35,7 @@ type BlockBase = {
 export interface BlockData_Paragraph {
     text: string;
     textAlign: 'left' | 'center' | 'right';
-    fontSize: number;
+    fontSize: string;
 }
 
 export interface BlockData_Header {
@@ -46,35 +46,21 @@ export interface BlockData_Header {
 
 export interface BlockData_Image {
     src: string;
-    width: null | number;
-    textAlign: 'left' | 'center' | 'right';
+    width?: string;
+    textAlign?: 'left' | 'center' | 'right';
 }
 
 export interface BlockData_Embed {
     src: string;
+    height: string;
+    width: string;
+    align: 'left' | 'center' | 'right';
 }
 
 export interface BlockData_Delimiter {
     // no data
 }
 
-// mapping of BlockType to BlockData
-export type BlockTypeSpecific = {
-    type: 'paragraph';
-    data: BlockData_Paragraph;
-} | {
-    type: 'header';
-    data: BlockData_Header;
-} | {
-    type: 'image';
-    data: BlockData_Image;
-} | {
-    type: 'embed';
-    data: BlockData_Embed;
-} | {
-    type: 'delimiter';
-    data: BlockData_Delimiter;
-}
 
 export interface BlockParagraph extends BlockBase {
     type: 'paragraph';
@@ -102,4 +88,22 @@ export interface BlockDelimiter extends BlockBase {
 }
 
 // main object
+// mapping of BlockType to BlockData
+export type BlockTypeSpecific = {
+    type: 'paragraph';
+    data: BlockData_Paragraph;
+} | {
+    type: 'header';
+    data: BlockData_Header;
+} | {
+    type: 'image';
+    data: BlockData_Image;
+} | {
+    type: 'embed';
+    data: BlockData_Embed;
+} | {
+    type: 'delimiter';
+    data: BlockData_Delimiter;
+}
+
 export type Block = BlockBase & BlockTypeSpecific;

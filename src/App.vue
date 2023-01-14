@@ -56,6 +56,7 @@ const demoContent = ref(<BlockPage>{
       type: "paragraph",
       data: {
         text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna",
+        textAlign: "center",
       },
       style: {
         spaceTop: 0,

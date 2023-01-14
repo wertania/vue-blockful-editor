@@ -1,5 +1,16 @@
 <template>
-  <span class="w-full textarea" role="textbox" autofocus :contenteditable="!readOnly" @input="updateText($event)">
+  <span class="w-full textarea" :class="
+    {
+      'text-left': modelValue.data.textAlign == null || modelValue.data.textAlign === 'left',
+      'text-center': modelValue.data.textAlign === 'center',
+      'text-right': modelValue.data.textAlign === 'right',
+      'text-sm': modelValue.data.fontSize == null || modelValue.data.fontSize === '0.8em',
+      'text-base': modelValue.data.fontSize === '1em',
+      'text-lg': modelValue.data.fontSize === '1.2em',
+      'text-xl': modelValue.data.fontSize === '1.4em',
+      'text-2xl': modelValue.data.fontSize === '2em',
+    }
+  " role="textbox" autofocus :contenteditable="!readOnly" @input="updateText($event)">
     {{ text }}
   </span>
 </template>

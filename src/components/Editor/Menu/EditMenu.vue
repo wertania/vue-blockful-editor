@@ -1,18 +1,33 @@
 <template>
-  <div class="fixed left-10 shadow-md bg-white w-[150px] rounded-md p-2 custom-top">
+  <div ref="editMenu" class="fixed left-10 shadow-md bg-white w-[250px] rounded-md p-2 custom-top">
     <h6 class="mb-2 font-semibold text-gray-900 dark:text-white">
       {{ "Edit" }}
     </h6>
-    <MenuParamsEmbedBlock v-if="modelValue.type === 'embed'" v-model="block" />
+    <MenuParamsEmbedBlock v-if="modelValue.type === 'embed'" v-model="<BlockEmbed>block" />
+    <MenuParamsParagraphBlock v-else-if="modelValue.type === 'paragraph'" v-model="<BlockParagraph>block" />
+    <MenuParamsHeaderBlock v-else-if="modelValue.type === 'header'" v-model="<BlockHeader>block" />
+    <MenuParamsImageBlock v-else-if="modelValue.type === 'image'" v-model="<BlockImage>block" />
+
+    <div class="bg-gray-200 hover:bg-gray-100 rounded cursor-pointer p-1 text-sm mt-2" @click="emit('drop', true)">
+      <i class="fa-solid fa-trash"></i>
+      <span class="ml-2">{{ "Delete"}}</span>
+    </div>
+    <div class="bg-gray-200 hover:bg-gray-100 rounded cursor-pointer p-1 text-sm mt-2" @click="emit('close', true)">
+      <i class="fa-solid fa-check"></i>
+      <span class="ml-2">{{ "Close"}}</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { Block } from "./../../../interfaces/blocks";
+import { computed, ref, onUnmounted, onMounted } from "vue";
+import { Block, BlockEmbed, BlockHeader, BlockImage, BlockParagraph } from "./../../../interfaces/blocks";
 import MenuParamsEmbedBlock from "./Edit/MenuParamsEmbedBlock.vue";
+import MenuParamsParagraphBlock from "./Edit/MenuParamsParagraphBlock.vue";
+import MenuParamsHeaderBlock from "./Edit/MenuParamsHeaderBlock.vue";
+import MenuParamsImageBlock from "./Edit/MenuParamsImageBlock.vue";
 
-defineEmits(["close"]);
+const emit = defineEmits(["close", "drop"]);
 
 const props = defineProps<{
   top: number;
@@ -23,8 +38,40 @@ const props = defineProps<{
 const block = ref(props.modelValue);
 
 // self style
-const topPx = computed(() => `${props.top}px`);
+const editMenu = ref(null);
+
+const topPx = computed(() => {
+  if (editMenu.value != null) {
+    const wH = window.innerHeight;
+    const menu: HTMLElement = editMenu.value;
+    if ((props.top + menu.offsetHeight) > window.innerHeight) {
+      return `${window.innerHeight - menu.offsetHeight}px`;
+    } else {
+      return `${props.top}px`
+    }
+  }
+});
 const leftPx = computed(() => `${props.left}px`);
+
+// close menu
+let loaded = false; // orevent first click
+const handleOutsieClick = (event: any) => {
+  // console.log(event);
+  // console.log(loaded);
+  if (loaded) {
+    event.stopPropagation();
+    emit("close", true);
+  }
+  loaded = true;
+};
+
+// onMounted(() => {
+//   document.body.addEventListener('click', handleOutsieClick);
+// });
+
+// onUnmounted(() => {
+//   document.body.removeEventListener('click', handleOutsieClick);
+// });
 </script>
 
 <style scoped>

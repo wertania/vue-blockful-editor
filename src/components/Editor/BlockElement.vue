@@ -5,7 +5,7 @@
     @add="addItem($event)" />
 
   <EditMenu :top="posMenuTop" :left="posMenuLeft" v-if="showEditMenu" @close="showEditMenu = false"
-    v-model="blockVar" />
+    @drop="emit('drop', true)" v-model="blockVar" />
 
   <!-- MAIN ENTRY BLOCK -->
   <div class="flex" :class="{
@@ -23,7 +23,7 @@
     'mt-6': blockVar.style.spaceTop === 6,
   }" @mouseover="toggleBlockButtons($event, true)" @mouseleave="toggleBlockButtons($event, false)">
     <!-- TOOLBAR -->
-    <div class="w-1/12 flex justify-center h-5">
+    <div class="w-1/12 flex items-center h-5">
       <i class="fa-solid fa-plus text-xl w-18 hover:bg-gray-200 hover:rounded" v-if="showBlockButtons"
         @click="openAddMenu($event)" />
       <i class="
@@ -65,7 +65,7 @@ const props = defineProps<{
 }>();
 const blockVar = ref(props.block);
 
-const emit = defineEmits(["add", "update"]);
+const emit = defineEmits(["add", "update", "drop"]);
 
 // v-model
 watch(blockVar, () => {

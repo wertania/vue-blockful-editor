@@ -3,7 +3,7 @@
     <div id="page-container">
       <div id="page" class="shadow-2xl">
         <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event, i)"
-          @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug" />
+          @drop="dropBlock(i)" @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug" />
       </div>
     </div>
   </div>
@@ -35,6 +35,11 @@ const addBlock = (data: { type: BlockType }, index: number) => {
   console.log(page.value);
 };
 
+const dropBlock = (index: number) => {
+  if (page.value.blocks.length === 1) return; // don't drop last block (at least one block is required)
+  page.value.blocks.splice(index, 1);
+};
+
 const updateBlock = (data: { block: Block }, index: number) => {
   page.value.blocks[index] = data.block;
 };
@@ -50,9 +55,10 @@ const background = computed(() => page.value.style?.background ?? "#fffff9");
 
 <style scoped>
 #page-editor {
+  padding-top: 10px;
   width: 100%;
   height: 100vh;
-  background: #fffff9;
+  background: #f8f8f8;
 }
 
 #page-container {
