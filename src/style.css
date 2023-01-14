@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind utilities;
+/* @tailwind components; */
+
+@layer base {
+  h1 {
+    @apply text-5xl;
+  }
+
+  h2 {
+    @apply text-4xl;
+  }
+
+  h3 {
+    @apply text-3xl;
+  }
+
+  h4 {
+    @apply text-2xl;
+  }
+
+  h5 {
+    @apply text-xl;
+  }
+
+  h6 {
+    @apply text-base;
+  }
+}
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  /* font-size: 13px;
+  line-height: 24px;
+  font-weight: 400; */
+}
+
+body {
+  margin: 0;
+}
+
+/* overwrite tailwind's default focus styles */
+:focus-visible {
+  outline: none;
+}
