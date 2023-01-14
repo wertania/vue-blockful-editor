@@ -41,8 +41,10 @@ const props = defineProps<{
   readOnly: Boolean;
   modelValue: BlockHeader;
 }>();
-
 const text = ref(props.modelValue.data.text);
+watch(props, () => {
+  text.value = props.modelValue.data.text;
+});
 
 const updateText = (e: Event) => {
   const txt = (e.target as HTMLDivElement).innerText;

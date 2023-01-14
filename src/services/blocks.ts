@@ -1,6 +1,7 @@
 import { Block, BlockType } from "../interfaces/blocks";
 
 export const defineEmptyBlock = (type: BlockType): Block => {
+    console.log('defineEmptyBlock', type);
     const data: Block = {
         type,
         data: {} as any,

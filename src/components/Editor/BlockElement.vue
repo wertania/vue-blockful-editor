@@ -1,5 +1,5 @@
 <template>
-  <div v-if="false">{{ blockVar }}</div>
+  <div v-if="debug">{{ "i: " + index }}</div>
 
   <AddMenu :top="posMenuTop" :left="posMenuLeft" v-if="showAddMenu" @close="showAddMenu = false"
     @add="addItem($event)" />
@@ -35,7 +35,7 @@
         " v-if="showBlockButtons" @click="openEditMenu($event)" />
     </div>
     <!-- BLOCK -->
-    <div class="w-11/12">
+    <div :class="{ 'w-11/12': readOnly, 'w-full': !readOnly }">
       <HeaderBlock v-if="blockVar.type === 'header'" v-model="<BlockHeader>blockVar" :readOnly="false" />
       <ParagraphBlock v-else-if="blockVar.type === 'paragraph'" v-model="<BlockParagraph>blockVar" :readOnly="false" />
       <ImageBlock v-else-if="blockVar.type === 'image'" v-model="<BlockImage>blockVar" :readOnly="false" />
@@ -60,6 +60,8 @@ import { ref, watch } from "vue";
 const props = defineProps<{
   block: Block;
   index: number;
+  readOnly: boolean;
+  debug?: boolean;
 }>();
 const blockVar = ref(props.block);
 
@@ -68,6 +70,9 @@ const emit = defineEmits(["add", "update"]);
 // v-model
 watch(blockVar, () => {
   emit('update', { block: blockVar.value });
+});
+watch(props, () => {
+  blockVar.value = props.block;
 });
 
 // Menus

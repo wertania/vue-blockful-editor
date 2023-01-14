@@ -6,7 +6,7 @@
     <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
       <li v-for="item of items" :key="item.value" class="flex items-center hover:bg-gray-100 cursor-pointer"
         @click="$emit('add', item.value)">
-        <i class="fa-solid text-2xl" :class="item.icon" />
+        <i class="text-2xl" :class="item.icon" />
         <span class="ml-2 text-sm">{{ item.label }}</span>
       </li>
     </ul>
@@ -28,19 +28,24 @@ const leftPx = computed(() => `${props.left}px`);
 
 const items = [
   {
-    icon: "fa-heading",
+    icon: "fa-solid fa-heading",
     label: "Header",
     value: "header",
   },
   {
-    icon: "fa-font",
+    icon: "fa-solid fa-font",
     label: "Paragraph",
     value: "paragraph",
   },
   {
-    icon: "fa-anchor",
+    icon: "fa-solid fa-anchor",
     label: "iframe",
     value: "iframe",
+  },
+  {
+    icon: "fa-solid fa-minus",
+    label: "Delimiter",
+    value: "delimiter",
   },
 ];
 </script>

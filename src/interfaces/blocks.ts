@@ -3,9 +3,22 @@
 export interface BlockPage {
     creator: string;
     title: string;
-    lastChange: string;
-    lastChangeBy: string;
+    meta?: {
+        lastChange: string;
+        lastChangeBy: string;
+    };
     blocks: Block[];
+    style?: {
+        // CSS styles in string format
+        width?: string;
+        background?: string;
+        padding?: {
+            top: string;
+            bottom: string;
+            left: string;
+            right: string;
+        }
+    }
 }
 
 // Block definition
