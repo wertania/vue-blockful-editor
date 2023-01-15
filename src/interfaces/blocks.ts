@@ -22,9 +22,9 @@ export interface BlockPage {
 }
 
 // Block definition
-export type BlockType = 'paragraph' | 'header' | 'image' | 'embed' | 'delimiter'; // | 'list' | 'quote' | 'code' | 'table';
+export type BlockType = 'paragraph' | 'header' | 'image' | 'embed' | 'delimiter' | 'richtext' | string; // | 'list' | 'quote' | 'code' | 'table';
 
-type BlockBase = {
+export type BlockBase = {
     type: BlockType;
     style: {
         spaceTop: number;
@@ -61,6 +61,10 @@ export interface BlockData_Delimiter {
     // no data
 }
 
+export interface BlockData_RichText {
+    html: string;
+}
+
 
 export interface BlockParagraph extends BlockBase {
     type: 'paragraph';
@@ -87,6 +91,11 @@ export interface BlockDelimiter extends BlockBase {
     data: BlockData_Delimiter;
 }
 
+export interface BlockRichText extends BlockBase {
+    type: 'delimiter';
+    data: BlockData_RichText;
+}
+
 // main object
 // mapping of BlockType to BlockData
 export type BlockTypeSpecific = {
@@ -104,6 +113,9 @@ export type BlockTypeSpecific = {
 } | {
     type: 'delimiter';
     data: BlockData_Delimiter;
+} | {
+    type: 'richtext';
+    data: BlockData_RichText;
 }
 
 export type Block = BlockBase & BlockTypeSpecific;

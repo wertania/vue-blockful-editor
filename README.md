@@ -12,3 +12,10 @@ Componenten dynamisch laden um Plugins zu erlauben
 
 plugin für rich-text (MIT)
 plugin für MD (MIT)
+
+skelton? bzw erst anzeigen wenn ready?!
+
+move items
+selectedItem für side-menu
+> plotter side-mode > den man dann generell nutzen könnte!
+tiptap per color highlight ggf Messdas werte rein bekommen?!

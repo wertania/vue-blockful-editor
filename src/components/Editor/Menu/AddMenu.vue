@@ -56,6 +56,11 @@ const items = [
     value: "paragraph",
   },
   {
+    icon: "fa-solid fa-font",
+    label: "RichText",
+    value: "richtext",
+  },
+  {
     icon: "fa-solid fa-anchor",
     label: "iframe",
     value: "iframe",

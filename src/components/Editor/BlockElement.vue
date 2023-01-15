@@ -41,6 +41,7 @@
       <ImageBlock v-else-if="blockVar.type === 'image'" v-model="<BlockImage>blockVar" :readOnly="false" />
       <EmbedBlock v-else-if="blockVar.type === 'embed'" v-model="<BlockEmbed>blockVar" :readOnly="false" />
       <DelimiterBlock v-else-if="blockVar.type === 'delimiter'" v-model="<BlockDelimiter>blockVar" :readOnly="false" />
+      <RichTextBlock v-else-if="blockVar.type === 'richtext'" v-model="<BlockRichText>blockVar" :readOnly="false" />
     </div>
   </div>
 </template>
@@ -53,8 +54,9 @@ import HeaderBlock from "./Blocks/HeaderBlock.vue";
 import ImageBlock from "./Blocks/ImageBlock.vue";
 import EmbedBlock from "./Blocks/EmbedBlock.vue";
 import DelimiterBlock from "./Blocks/DelimiterBlock.vue";
+import RichTextBlock from "./Blocks/RichTextBlock.vue";
 
-import { Block, BlockDelimiter, BlockEmbed, BlockHeader, BlockImage, BlockParagraph, BlockType } from "./../../interfaces/blocks";
+import { Block, BlockDelimiter, BlockEmbed, BlockHeader, BlockImage, BlockParagraph, BlockRichText, BlockType } from "./../../interfaces/blocks";
 import { ref, watch } from "vue";
 
 const props = defineProps<{

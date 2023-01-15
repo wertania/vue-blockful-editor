@@ -33,9 +33,9 @@ const demoContent = ref(<BlockPage>{
       },
     },
     {
-      type: "paragraph",
+      type: "richtext",
       data: {
-        text: "Hello World!\r\n\r\nThis is a paragraph block. You can edit it by clicking on it.",
+        html: "<p>Hi there. I´m vue-blockful-editor!</p>",
       },
       style: {
         spaceTop: 0,
