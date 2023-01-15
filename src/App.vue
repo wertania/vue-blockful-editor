@@ -1,6 +1,49 @@
 <template>
-  <!-- DEMO APPLICATION WITH EDITOR -->
-  <BlockEditor v-model="demoContent" :readOnly="readOnly" :debug="false" :plugins="plugins" />
+  <!-- DEMO APPLICATION WITH EDITOR AND THE PARAMETERS TO TEST -->
+
+  <div class="flex">
+    <!-- side menu -->
+    <div class="w-2/12 text-sm bg-gray-300 p-3">
+
+      <span>Demo Sidebar</span><br />
+
+      <span>Parameters:</span>
+
+      <div class="flex items-center mt-2">
+        <input id="debug" type="checkbox" v-model="debug"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+        <label for="debug" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+          Debug Mode
+        </label>
+      </div>
+
+      <div class="flex items-center mt-2">
+        <input id="readOnly" type="checkbox" v-model="readOnly"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+        <label for="readOnly" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+          Read only
+        </label>
+      </div>
+
+      <div class="flex items-center mt-2">
+        <input id="showAllBlockControls" type="checkbox" v-model="showAllBlockControls"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+        <label for="showAllBlockControls" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+          Show controls
+        </label>
+      </div>
+
+      <div class="bg-gray-400 rounded p-2 mt-2 cursor-pointer">Test Element to drag</div>
+    </div>
+
+    <!-- editor component -->
+    <div class="w-10/12">
+      <BlockEditor v-model="demoContent" :readOnly="readOnly" :debug="debug" :plugins="plugins"
+        :showAllBlockControls="showAllBlockControls" />
+    </div>
+  </div>
+
+
 </template>
 
 <script setup lang="ts">
@@ -29,6 +72,8 @@ const plugins = [
 ];
 
 const readOnly = ref(false);
+const showAllBlockControls = ref(false);
+const debug = ref(false);
 
 const demoContent = ref(<BlockPage>{
   creator: "Björn Enders",

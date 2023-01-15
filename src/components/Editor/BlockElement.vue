@@ -11,31 +11,46 @@
     @drop="emit('drop', true)" v-model="blockVar" :customEntriesEditMenu="customEntriesEditMenu" />
 
   <!-- MAIN ENTRY BLOCK in Editor Mode -->
-  <div v-if="!readOnly" class="flex" :class="marginTop, marginBottom" @mouseover="toggleBlockButtons($event, true)"
+  <div class="flex" :class="marginTop, marginBottom" @mouseover="toggleBlockButtons($event, true)"
     @mouseleave="toggleBlockButtons($event, false)">
-    <!-- EDIT COLUMN -->
-    <div class="w-1/12 flex items-center h-5">
-      <i class="fa-solid fa-plus text-xl w-18 hover:bg-gray-200 hover:rounded" v-if="showBlockButtons"
-        @click="openAddMenu($event)" />
-      <i class="
+
+    <!-- EDIT COLUMN HINT -->
+    <div v-if="!readOnly" class="w-1/12 h-5">
+      <!-- first row: add, edit -->
+      <div class="flex w-full" v-if="showBlockButtons || showAllBlockControls">
+        <i class="fa-solid fa-plus text-xl w-18 ml-0 hover:bg-gray-200 hover:rounded" @click="openAddMenu($event)" />
+        <i class="
           fa-solid fa-wrench
           text-xl
           w-18
           ml-1
           hover:bg-gray-200 hover:rounded
-        " v-if="showBlockButtons" @click="openEditMenu($event)" />
+        " @click="openEditMenu($event)" />
+      </div>
+      <!-- second row: move up, down -->
+      <div class="flex w-full mt-2 text-gray-500" v-if="showBlockButtons || showAllBlockControls">
+        <i class="
+          fa-solid fa-caret-up
+          text-xl
+          w-18
+          ml-0
+          hover:bg-gray-200 hover:rounded
+        " @click="emit('move', { direction: -1, index: props.index })" />
+        <i class="
+          fa-solid fa-caret-down
+          text-xl
+          w-18
+          ml-2
+          hover:bg-gray-200 hover:rounded
+        " @click="emit('move', { direction: 1, index: props.index })" />
+      </div>
+
     </div>
     <!-- BLOCK COLUMN -->
-    <div class="w-11/12" :class="marginTop, marginBottom">
+    <div :class="{ 'w-11/12': !readOnly, 'w-full': readOnly, marginTop: true, marginBottom: true }">
       <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin"
         :readOnly="readOnly" :debug="debug" />
     </div>
-  </div>
-
-  <!-- MAIN ENTRY BLOCK in Viewer Mode -->
-  <div v-else class="w-full">
-    <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin" :readOnly="readOnly"
-      :debug="debug" />
   </div>
 
 </template>
@@ -45,7 +60,7 @@ import AddMenu from "./Menu/AddMenu.vue";
 import EditMenu from "./Menu/EditMenu.vue";
 import PluginWrapper from "./PluginWrapper.vue";
 import { UniversalBlock } from "../../interfaces/page";
-import { ref, watch, computed, Component } from "vue";
+import { ref, watch, computed } from "vue";
 import { AddMenuEntry, EditMenuEntry } from "../../interfaces/menu";
 import { BlockPlugin } from "../../interfaces/plugin";
 
@@ -57,9 +72,10 @@ const props = defineProps<{
   blocksToAdd: AddMenuEntry[];
   debug?: boolean;
   customEntriesEditMenu: EditMenuEntry[];
+  showAllBlockControls?: boolean;
 }>();
 
-const emit = defineEmits(["add", "update", "drop"]);
+const emit = defineEmits(["add", "update", "drop", "move"]);
 
 const blockVar = ref(props.block);
 watch(blockVar, () => {

@@ -4,7 +4,8 @@
       <div id="page" class="shadow-2xl">
         <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event, i)"
           @drop="dropBlock(i)" @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug" :plugins="plugins"
-          :blocksToAdd="blocksToAdd" :customEntriesEditMenu="customEntriesEditMenu" />
+          :blocksToAdd="blocksToAdd" :customEntriesEditMenu="customEntriesEditMenu"
+          :showAllBlockControls="showAllBlockControls" @move="movePosition($event, i)" />
       </div>
     </div>
   </div>
@@ -22,6 +23,7 @@ const props = defineProps<{
   readOnly: boolean;
   plugins: BlockPlugin[];
   debug?: boolean;
+  showAllBlockControls?: boolean;
 }>();
 const emit = defineEmits(['update:modelValue']);
 
@@ -71,6 +73,14 @@ const dropBlock = (index: number) => {
 const updateBlock = (data: { block: UniversalBlock }, index: number) => {
   page.value.blocks[index] = data.block;
 };
+const movePosition = (data: { direction: number; }, index: number) => {
+  if (index === -1) return;
+  const newIndex = index + data.direction;
+  if (newIndex < 0 || newIndex >= page.value.blocks.length) return;
+  const block = page.value.blocks[index];
+  page.value.blocks.splice(index, 1);
+  page.value.blocks.splice(newIndex, 0, block);
+}
 
 // main page style
 const padding = computed(() => {
@@ -87,6 +97,7 @@ const background = computed(() => page.value.style?.background ?? "#fffff9");
   width: 100%;
   height: 100vh;
   background: #f8f8f8;
+  overflow-y: scroll;
 }
 
 #page-container {
