@@ -33,7 +33,9 @@
         </label>
       </div>
 
-      <div class="bg-gray-400 rounded p-2 mt-2 cursor-pointer">Test Element to drag</div>
+      <div class="bg-gray-400 rounded p-2 mt-2 cursor-pointer" draggable="true" @dragstart="onDrag($event)">Test Element
+        to
+        drag</div>
     </div>
 
     <!-- editor component -->
@@ -60,9 +62,11 @@ import PluginHeader from "./default-plugins/header";
 import PluginImage from "./default-plugins/image";
 import PluginParagraph from "./default-plugins/paragraph";
 import PluginRichText from "./default-plugins/richtext";
+import { BlockImage } from "./default-plugins/image/types";
+import { DragNDropData } from "./interfaces/dragndrop";
 
 const plugins = [
-  PluginPlainHtml,
+  // PluginPlainHtml,
   PluginDelimiter,
   PluginEmbed,
   PluginHeader,
@@ -75,6 +79,28 @@ const readOnly = ref(false);
 const showAllBlockControls = ref(false);
 const debug = ref(false);
 
+// send some data to the editor
+const onDrag = (event: DragEvent) => {
+  // console.log("drag", event);
+  const data: BlockImage = {
+    type: "image",
+    data: {
+      src: "https://i.picsum.photos/id/13/2500/1667.jpg?hmac=SoX9UoHhN8HyklRA4A3vcCWJMVtiBXUg0W4ljWTor7s",
+    },
+    style: {
+      spaceTop: 0,
+      spaceBottom: 0,
+    },
+  };
+  const dde: DragNDropData = {
+    type: "block",
+    action: "add",
+    data,
+  }
+  event.dataTransfer?.setData("data", JSON.stringify(dde));
+};
+
+// show some data in the editor
 const demoContent = ref(<BlockPage>{
   creator: "Björn Enders",
   title: "A demo page",
@@ -144,14 +170,6 @@ const demoContent = ref(<BlockPage>{
       data: {
         src: "https://www.wetter.de/widget/3tage/u1hcy/false/",
       },
-      style: {
-        spaceTop: 0,
-        spaceBottom: 0,
-      },
-    },
-    {
-      type: "delimiter",
-      data: {},
       style: {
         spaceTop: 0,
         spaceBottom: 0,

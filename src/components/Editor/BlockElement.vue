@@ -47,12 +47,12 @@
 
     </div>
     <!-- BLOCK COLUMN -->
-    <div :class="{ 'w-11/12': !readOnly, 'w-full': readOnly, marginTop: true, marginBottom: true }">
+    <div :class="{ 'w-11/12': !readOnly, 'w-full': readOnly, marginTop: true, marginBottom: true }"
+      @drop="dropItem($event)" @dragover.prevent @dragenter.prevent>
       <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin"
         :readOnly="readOnly" :debug="debug" />
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -63,6 +63,8 @@ import { UniversalBlock } from "../../interfaces/page";
 import { ref, watch, computed } from "vue";
 import { AddMenuEntry, EditMenuEntry } from "../../interfaces/menu";
 import { BlockPlugin } from "../../interfaces/plugin";
+import { DragNDropData } from "../../interfaces/dragndrop";
+import { emitter } from "./../../services/emitter";
 
 const props = defineProps<{
   block: UniversalBlock;
@@ -98,6 +100,9 @@ const toggleBlockButtons = (e: MouseEvent, val?: boolean) => {
 };
 
 const openAddMenu = (e: MouseEvent) => {
+  showEditMenu.value = false; // close other menu in this component if opened
+  emitter.emit("close-other-menus", props.index); // close other menus in editor
+
   const node = e.target as HTMLElement;
   const { bottom, left } = node.getBoundingClientRect();
   posMenuTop.value = bottom;
@@ -106,6 +111,9 @@ const openAddMenu = (e: MouseEvent) => {
 };
 
 const openEditMenu = (e: MouseEvent) => {
+  showAddMenu.value = false; // close other menu in this component if opened
+  emitter.emit("close-other-menus", props.index); // close other menus in editor
+
   const node = e.target as HTMLElement;
   const { bottom, left } = node.getBoundingClientRect();
   posMenuTop.value = bottom;
@@ -116,6 +124,17 @@ const openEditMenu = (e: MouseEvent) => {
 const addItem = (type: string) => {
   showAddMenu.value = false;
   emit("add", { type, index: props.index }); // forward event to parent and close menu
+};
+
+const dropItem = (e: DragEvent) => {
+  const data = e.dataTransfer?.getData("data");
+  if (data) {
+    const dde = JSON.parse(data) as DragNDropData;
+    // console.log("drop data", dde);
+    if (dde.type === "block" && dde.action === "add") {
+      emit("add", { block: dde.data, index: props.index });
+    }
+  }
 };
 
 // styling
@@ -137,5 +156,14 @@ const marginBottom = computed(() => {
   if (blockVar.value.style?.spaceBottom === 4) margin = 'mb-4';
   if (blockVar.value.style?.spaceBottom === 5) margin = 'mb-5';
   return margin;
+});
+
+emitter.on('hide-controls', () => { showAddMenu.value = false; showEditMenu.value = false; });
+
+emitter.on('close-other-menus', (index: any) => {
+  if (index !== props.index) {
+    showAddMenu.value = false;
+    showEditMenu.value = false;
+  }
 });
 </script>

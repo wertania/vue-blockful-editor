@@ -1,91 +1,104 @@
 <template>
+    {{ editor?.isActive("te" as any) }}
     <div v-if="editor && !readOnly" id="editor-toolbar">
-        <i class="fa-solid fa-bold bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleBold().run()"
-            :disabled="!editor.can().chain().focus().toggleBold().run()"
-            :class="{ 'bg-gray-400': editor.isActive('bold') }" />
 
-        <i class="fa-solid fa-italic  bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleItalic().run()"
-            :disabled="!editor.can().chain().focus().toggleItalic().run()"
-            :class="{ 'bg-gray-400': editor.isActive('italic') }" />
+        <div class="flex">
+            <!-- hide/show -->
+            <i class="fa-solid bg-gray-200 hover:bg-gray-200 rounded-sm cursor-pointer p-1 ml-0"
+                @click="toolbarToggled = !toolbarToggled" :disabled="!editor.can().chain().focus().toggleBold().run()"
+                :class="{ 'bg-gray-400': editor.isActive('bold'), 'fa-eye-slash': toolbarToggled, 'fa-eye': !toolbarToggled }" />
 
-        <i class="fa-solid fa-strikethrough bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleStrike().run()"
-            :disabled="!editor.can().chain().focus().toggleStrike().run()"
-            :class="{ 'bg-gray-400': editor.isActive('strike') }" />
+            <div v-if="!toolbarToggled">
+                <i class="fa-solid fa-bold bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleBold().run()"
+                    :disabled="!editor.can().chain().focus().toggleBold().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('bold') }" />
 
-        <i class="fa-solid fa-code bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleCode().run(); editor?.chain().focus().unsetAllMarks().run()"
-            :disabled="!editor.can().chain().focus().toggleCode().run()"
-            :class="{ 'bg-gray-400': editor.isActive('code') }" />
+                <i class="fa-solid fa-italic  bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleItalic().run()"
+                    :disabled="!editor.can().chain().focus().toggleItalic().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('italic') }" />
 
-        <!-- <i class="fa-solid fa-bold" @click="editor?.chain().focus().unsetAllMarks().run()">
+                <i class="fa-solid fa-strikethrough bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleStrike().run()"
+                    :disabled="!editor.can().chain().focus().toggleStrike().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('strike') }" />
+
+                <i class="fa-solid fa-code bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleCode().run(); editor?.chain().focus().unsetAllMarks().run()"
+                    :disabled="!editor.can().chain().focus().toggleCode().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('code') }" />
+
+                <!-- <i class="fa-solid fa-bold" @click="editor?.chain().focus().unsetAllMarks().run()">
       clear marks
     </i> -->
 
-        <i class="fa-solid fa-text-slash bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().clearNodes().run()" />
+                <i class="fa-solid fa-text-slash bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().clearNodes().run()" />
 
-        <i class="fa-solid fa-paragraph bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().setParagraph().run()"
-            :class="{ 'bg-gray-400': editor.isActive('paragraph') }" />
+                <i class="fa-solid fa-paragraph bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().setParagraph().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('paragraph') }" />
 
-        <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleHeading({ level: 1 }).run()"
-            :class="{ 'bg-gray-400': editor.isActive('heading', { level: 1 }) }">
-            h1
-        </i>
-        <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleHeading({ level: 2 }).run()"
-            :class="{ 'bg-gray-400': editor.isActive('heading', { level: 2 }) }">
-            h2
-        </i>
-        <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleHeading({ level: 3 }).run()"
-            :class="{ 'bg-gray-400': editor.isActive('heading', { level: 3 }) }">
-            h3
-        </i>
-        <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleHeading({ level: 4 }).run()"
-            :class="{ 'bg-gray-400': editor.isActive('heading', { level: 4 }) }">
-            h4
-        </i>
-        <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleHeading({ level: 5 }).run()"
-            :class="{ 'bg-gray-400': editor.isActive('heading', { level: 5 }) }">
-            h5
-        </i>
-        <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleHeading({ level: 6 }).run()"
-            :class="{ 'bg-gray-400': editor.isActive('heading', { level: 6 }) }">
-            h6
-        </i>
+                <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleHeading({ level: 1 }).run()"
+                    :class="{ 'bg-gray-400': editor.isActive('heading', { level: 1 }) }">
+                    h1
+                </i>
+                <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleHeading({ level: 2 }).run()"
+                    :class="{ 'bg-gray-400': editor.isActive('heading', { level: 2 }) }">
+                    h2
+                </i>
+                <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleHeading({ level: 3 }).run()"
+                    :class="{ 'bg-gray-400': editor.isActive('heading', { level: 3 }) }">
+                    h3
+                </i>
+                <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleHeading({ level: 4 }).run()"
+                    :class="{ 'bg-gray-400': editor.isActive('heading', { level: 4 }) }">
+                    h4
+                </i>
+                <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleHeading({ level: 5 }).run()"
+                    :class="{ 'bg-gray-400': editor.isActive('heading', { level: 5 }) }">
+                    h5
+                </i>
+                <i class="not-italic bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleHeading({ level: 6 }).run()"
+                    :class="{ 'bg-gray-400': editor.isActive('heading', { level: 6 }) }">
+                    h6
+                </i>
 
-        <i class="fa-solid fa-list-ul bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleBulletList().run()"
-            :class="{ 'bg-gray-400': editor.isActive('bulletList') }" />
+                <i class="fa-solid fa-list-ul bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleBulletList().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('bulletList') }" />
 
-        <i class="fa-solid fa-list-ol bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleOrderedList().run()"
-            :class="{ 'bg-gray-400': editor.isActive('orderedList') }" />
+                <i class="fa-solid fa-list-ol bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleOrderedList().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('orderedList') }" />
 
-        <i class="fa-solid fa-file-code bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleCodeBlock().run()"
-            :class="{ 'bg-gray-400': editor.isActive('codeBlock') }" />
+                <i class="fa-solid fa-file-code bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleCodeBlock().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('codeBlock') }" />
 
-        <i class="fa-solid fa-chevron-right bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().toggleBlockquote().run()"
-            :class="{ 'bg-gray-400': editor.isActive('blockquote') }" />
+                <i class="fa-solid fa-chevron-right bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().toggleBlockquote().run()"
+                    :class="{ 'bg-gray-400': editor.isActive('blockquote') }" />
 
-        <i class="fa-solid fa-minus bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().setHorizontalRule().run()" />
+                <i class="fa-solid fa-minus bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().setHorizontalRule().run()" />
 
-        <i class="fa-solid fa-rotate-left bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()" />
+                <i class="fa-solid fa-rotate-left bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().undo().run()"
+                    :disabled="!editor.can().chain().focus().undo().run()" />
 
-        <i class="fa-solid fa-rotate-right bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
-            @click="editor?.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()" />
+                <i class="fa-solid fa-rotate-right bg-gray-200 hover:bg-gray-100 rounded-sm cursor-pointer p-1 ml-1"
+                    @click="editor?.chain().focus().redo().run()"
+                    :disabled="!editor.can().chain().focus().redo().run()" />
+            </div>
+        </div>
     </div>
     <editor-content :editor="editor" />
 </template>
@@ -102,12 +115,15 @@ const props = defineProps<{
     modelValue: BlockRichText;
 }>();
 
+const toolbarToggled = ref(false);
+
 // initialize the TipTap instance
 const editor = useEditor({
     content: props.modelValue.data.html,
     extensions: [
         StarterKit,
     ],
+    editable: !props.readOnly,
     onUpdate: () => {
         emit('update:modelValue', {
             ...props.modelValue,
@@ -131,6 +147,10 @@ watch(() => props.modelValue, (value) => {
 onBeforeMount(() => {
     editor.value?.destroy();
 })
+
+watch(() => props.readOnly, (value) => {
+    editor.value?.setEditable(!value);
+});
 </script>
 
 <style lang="postcss">

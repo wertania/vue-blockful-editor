@@ -1,5 +1,5 @@
 <template>
-  <div id="page-editor">
+  <div id="page-editor" @scroll="emitter.emit('hide-controls')">
     <div id="page-container">
       <div id="page" class="shadow-2xl">
         <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event, i)"
@@ -17,6 +17,7 @@ import { AddMenuEntry, EditMenuEntry } from "../../interfaces/menu";
 import { BlockPage, UniversalBlock } from "../../interfaces/page";
 import { BlockPlugin } from "../../interfaces/plugin";
 import BlockElement from "./BlockElement.vue";
+import { emitter } from "./../../services/emitter";
 
 const props = defineProps<{
   modelValue: BlockPage;
@@ -62,9 +63,12 @@ const defineEmptyBlock = (type: string) => {
   if (!plugin) throw new Error(`Plugin ${type} not found`);
   return plugin.emptyBlock();
 };
-const addBlock = (data: { type: string }, index: number) => {
-  page.value.blocks.splice(index + 1, 0, defineEmptyBlock(data.type));
-  console.log(page.value);
+const addBlock = (data: { type?: string, index: number, block?: UniversalBlock }, index: number) => {
+  if (data.type) {
+    page.value.blocks.splice(index + 1, 0, defineEmptyBlock(data.type));
+  } else if (data.block) {
+    page.value.blocks.splice(index + 1, 0, data.block);
+  }
 };
 const dropBlock = (index: number) => {
   if (page.value.blocks.length === 1) return; // don't drop last block (at least one block is required)
@@ -81,6 +85,11 @@ const movePosition = (data: { direction: number; }, index: number) => {
   page.value.blocks.splice(index, 1);
   page.value.blocks.splice(newIndex, 0, block);
 }
+
+// handle hide menus
+const hideControls = () => {
+  emitter.emit("hide-controls");
+};
 
 // main page style
 const padding = computed(() => {
