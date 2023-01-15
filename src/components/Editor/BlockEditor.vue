@@ -5,7 +5,7 @@
         <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event, i)"
           @drop="dropBlock(i)" @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug" :plugins="plugins"
           :blocksToAdd="blocksToAdd" :customEntriesEditMenu="customEntriesEditMenu"
-          :showAllBlockControls="showAllBlockControls" @move="movePosition($event, i)" />
+          :showAllBlockControls="showAllBlockControls" @move="movePosition($event, i)" :uploadSettings="uploadSettings" />
       </div>
     </div>
   </div>
@@ -18,6 +18,7 @@ import { BlockPage, UniversalBlock } from "../../interfaces/page";
 import { BlockPlugin } from "../../interfaces/plugin";
 import BlockElement from "./BlockElement.vue";
 import { emitter } from "./../../services/emitter";
+import { UploadSettings } from "../../interfaces/upload";
 
 const props = defineProps<{
   modelValue: BlockPage;
@@ -25,6 +26,7 @@ const props = defineProps<{
   plugins: BlockPlugin[];
   debug?: boolean;
   showAllBlockControls?: boolean;
+  uploadSettings?: UploadSettings;
 }>();
 const emit = defineEmits(['update:modelValue']);
 

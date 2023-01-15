@@ -50,7 +50,8 @@
     <div :class="{ 'w-11/12': !readOnly, 'w-full': readOnly, marginTop: true, marginBottom: true }"
       @drop="dropItem($event)" @dragover.prevent @dragenter.prevent>
       <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin"
-        :readOnly="readOnly" :debug="debug" />
+        :readOnly="readOnly" :debug="debug"
+        :uploadSettings="plugin.optionalProperties?.uploadSettings ? uploadSettings : undefined" />
     </div>
   </div>
 </template>
@@ -65,6 +66,7 @@ import { AddMenuEntry, EditMenuEntry } from "../../interfaces/menu";
 import { BlockPlugin } from "../../interfaces/plugin";
 import { DragNDropData } from "../../interfaces/dragndrop";
 import { emitter } from "./../../services/emitter";
+import { UploadSettings } from "../../interfaces/upload";
 
 const props = defineProps<{
   block: UniversalBlock;
@@ -75,6 +77,7 @@ const props = defineProps<{
   debug?: boolean;
   customEntriesEditMenu: EditMenuEntry[];
   showAllBlockControls?: boolean;
+  uploadSettings?: UploadSettings;
 }>();
 
 const emit = defineEmits(["add", "update", "drop", "move"]);

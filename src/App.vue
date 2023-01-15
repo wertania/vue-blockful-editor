@@ -33,6 +33,14 @@
         </label>
       </div>
 
+      <div class="flex items-center mt-2">
+        <input id="showAllBlockControls" type="text" v-model="uploadAddress"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+        <label for="showAllBlockControls" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+          Upload address
+        </label>
+      </div>
+
       <div class="bg-gray-400 rounded p-2 mt-2 cursor-pointer" draggable="true" @dragstart="onDrag($event)">Test Element
         to
         drag</div>
@@ -41,7 +49,7 @@
     <!-- editor component -->
     <div class="w-10/12">
       <BlockEditor v-model="demoContent" :readOnly="readOnly" :debug="debug" :plugins="plugins"
-        :showAllBlockControls="showAllBlockControls" />
+        :showAllBlockControls="showAllBlockControls" :uploadSettings="uploadSettings" />
     </div>
   </div>
 
@@ -54,6 +62,7 @@ import { ref } from "vue";
 // editor
 import BlockEditor from "./components/Editor/BlockEditor.vue";
 import { BlockPage } from "./interfaces/page";
+import { UploadSettings } from "./interfaces/upload";
 // plugins
 import PluginPlainHtml from "./default-plugins/plainhtml";
 import PluginDelimiter from "./default-plugins/delimiter";
@@ -78,6 +87,12 @@ const plugins = [
 const readOnly = ref(false);
 const showAllBlockControls = ref(false);
 const debug = ref(false);
+const uploadAddress = ref("http://localhost:3000/upload");
+const uploadSettings = ref(<UploadSettings>{
+  url: uploadAddress.value,
+  formDataKey: "value",
+  // uploadFunction: () => { },
+});
 
 // send some data to the editor
 const onDrag = (event: DragEvent) => {
@@ -124,6 +139,16 @@ const demoContent = ref(<BlockPage>{
       style: {
         spaceTop: 1,
         spaceBottom: 3,
+      },
+    },
+    {
+      type: "image",
+      data: {
+        src: "",
+      },
+      style: {
+        spaceTop: 0,
+        spaceBottom: 1,
       },
     },
     {

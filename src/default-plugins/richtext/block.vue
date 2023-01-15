@@ -1,5 +1,4 @@
 <template>
-    {{ editor?.isActive("te" as any) }}
     <div v-if="editor && !readOnly" id="editor-toolbar">
 
         <div class="flex">

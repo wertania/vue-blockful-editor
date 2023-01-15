@@ -14,5 +14,8 @@ export interface BlockPlugin {
         }
         addMenuTemplate?: Component; // optional Vue component that will be shown in the add menu
         editMenuTemplate?: Component; // optional Vue component that will be shown in the edit menu
+    },
+    optionalProperties?: {
+        uploadSettings: boolean;
     }
 }

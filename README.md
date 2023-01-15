@@ -1,5 +1,5 @@
 
-### Bekannte probleme
+## Know Issues
 
 bug:
 eintellen von SRC für image und embed
