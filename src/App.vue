@@ -1,11 +1,34 @@
 <template>
-  <BlockEditor v-model="demoContent" :readOnly="false" :debug="false" />
+  <!-- DEMO APPLICATION WITH EDITOR -->
+  <BlockEditor v-model="demoContent" :readOnly="readOnly" :debug="false" :plugins="plugins" />
 </template>
 
 <script setup lang="ts">
-import BlockEditor from "./components/BlockEditor.vue";
-import { BlockPage } from "./interfaces/blocks";
 import { ref } from "vue";
+
+// editor
+import BlockEditor from "./components/Editor/BlockEditor.vue";
+import { BlockPage } from "./interfaces/page";
+// plugins
+import PluginPlainHtml from "./default-plugins/plainhtml";
+import PluginDelimiter from "./default-plugins/delimiter";
+import PluginEmbed from "./default-plugins/embed";
+import PluginHeader from "./default-plugins/header";
+import PluginImage from "./default-plugins/image";
+import PluginParagraph from "./default-plugins/paragraph";
+import PluginRichText from "./default-plugins/richtext";
+
+const plugins = [
+  PluginPlainHtml,
+  PluginDelimiter,
+  PluginEmbed,
+  PluginHeader,
+  PluginImage,
+  PluginParagraph,
+  PluginRichText,
+];
+
+const readOnly = ref(false);
 
 const demoContent = ref(<BlockPage>{
   creator: "Björn Enders",
@@ -28,7 +51,7 @@ const demoContent = ref(<BlockPage>{
         level: 1,
       },
       style: {
-        spaceTop: 0,
+        spaceTop: 1,
         spaceBottom: 3,
       },
     },

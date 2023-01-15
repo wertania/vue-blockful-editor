@@ -1,17 +1,27 @@
 <template>
-  <div ref="editMenu" class="fixed left-10 shadow-md bg-white w-[250px] rounded-md p-2 custom-top">
+  <div ref="editMenu" class="fixed left-10 shadow-md bg-white w-[250px] rounded-md p-2 z-50 custom-top">
     <h6 class="mb-2 font-semibold text-gray-900 dark:text-white">
       {{ "Edit" }}
     </h6>
-    <MenuParamsEmbedBlock v-if="modelValue.type === 'embed'" v-model="<BlockEmbed>block" />
+    <!-- <MenuParamsEmbedBlock v-if="modelValue.type === 'embed'" v-model="<BlockEmbed>block" />
     <MenuParamsParagraphBlock v-else-if="modelValue.type === 'paragraph'" v-model="<BlockParagraph>block" />
     <MenuParamsHeaderBlock v-else-if="modelValue.type === 'header'" v-model="<BlockHeader>block" />
-    <MenuParamsImageBlock v-else-if="modelValue.type === 'image'" v-model="<BlockImage>block" />
+    <MenuParamsImageBlock v-else-if="modelValue.type === 'image'" v-model="<BlockImage>block" /> -->
 
+
+
+    <!-- custom entries -->
+    <div v-for="entry in customEntriesEditMenu" :key="entry.name">
+      <component v-if="entry.name === modelValue.type" :is="entry.template" v-model="block" />
+    </div>
+
+    <!-- delete button -->
     <div class="bg-gray-200 hover:bg-gray-100 rounded cursor-pointer p-1 text-sm mt-2" @click="emit('drop', true)">
       <i class="fa-solid fa-trash"></i>
       <span class="ml-2">{{ "Delete"}}</span>
     </div>
+
+    <!-- close button -->
     <div class="bg-gray-200 hover:bg-gray-100 rounded cursor-pointer p-1 text-sm mt-2" @click="emit('close', true)">
       <i class="fa-solid fa-check"></i>
       <span class="ml-2">{{ "Close"}}</span>
@@ -21,18 +31,16 @@
 
 <script setup lang="ts">
 import { computed, ref, onUnmounted, onMounted } from "vue";
-import { Block, BlockEmbed, BlockHeader, BlockImage, BlockParagraph } from "./../../../interfaces/blocks";
-import MenuParamsEmbedBlock from "./Edit/MenuParamsEmbedBlock.vue";
-import MenuParamsParagraphBlock from "./Edit/MenuParamsParagraphBlock.vue";
-import MenuParamsHeaderBlock from "./Edit/MenuParamsHeaderBlock.vue";
-import MenuParamsImageBlock from "./Edit/MenuParamsImageBlock.vue";
+import { EditMenuEntry } from "../../../interfaces/menu";
+import { UniversalBlock } from "../../../interfaces/page";
 
 const emit = defineEmits(["close", "drop"]);
 
 const props = defineProps<{
   top: number;
   left: number;
-  modelValue: Block;
+  modelValue: UniversalBlock;
+  customEntriesEditMenu: EditMenuEntry[]; // custom entries to render
 }>();
 
 const block = ref(props.modelValue);
@@ -72,6 +80,9 @@ const handleOutsieClick = (event: any) => {
 // onUnmounted(() => {
 //   document.body.removeEventListener('click', handleOutsieClick);
 // });
+window.onscroll = function () {
+  emit("close", true);
+}
 </script>
 
 <style scoped>

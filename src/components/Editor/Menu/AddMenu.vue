@@ -1,20 +1,24 @@
 <template>
-  <div ref="addMenu" class="fixed left-10 shadow-md bg-white w-[150px] rounded-md p-2 custom-top">
+  <div ref="addMenu" class="fixed left-10 shadow-md bg-white w-[150px] rounded-md p-2 z-50 text-gray-600 custom-top">
+
+    <!--TITLE -->
     <h6 class="mb-2 font-semibold text-gray-900 dark:text-white">
       {{ "Elements" }}
     </h6>
-    <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
-      <li v-for="item of items" :key="item.value" class="flex items-center hover:bg-gray-100 cursor-pointer"
-        @click="$emit('add', item.value)">
-        <i class="text-2xl" :class="item.icon" />
-        <span class="ml-2 text-sm">{{ item.label }}</span>
-      </li>
-    </ul>
 
+    <!-- ENTRIES THAT CAN BE ADDED -->
+    <div v-for="item of blocksToAdd" :key="item.value" class="flex hover:bg-gray-100 cursor-pointer"
+      @click="$emit('add', item.value)">
+      <i class="w-2/6 text-sm" :class="item.icon" />
+      <span class="w-4/6 text-sm">{{ item.label }}</span>
+    </div>
+
+    <!-- CLOSE BUTTON -->
     <div class="bg-gray-200 hover:bg-gray-100 rounded cursor-pointer p-1 text-sm mt-2" @click="emit('close', true)">
       <i class="fa-solid fa-ban"></i>
       <span class="ml-2">{{ "Close"}}</span>
     </div>
+
   </div>
 </template>
 
@@ -27,9 +31,11 @@ const emit = defineEmits(["add", "close"]);
 const props = defineProps<{
   top: number;
   left: number;
+  blocksToAdd: { label: string; value: string; icon: string; }[];
 }>();
 const addMenu = ref<HTMLElement | null>(null);
 
+const startPosition = props.top;
 const topPx = computed(() => {
   if (addMenu.value != null) {
     const wH = window.innerHeight;
@@ -43,40 +49,9 @@ const topPx = computed(() => {
 });
 const leftPx = computed(() => `${props.left}px`);
 
-// define menu items
-const items = [
-  {
-    icon: "fa-solid fa-heading",
-    label: "Header",
-    value: "header",
-  },
-  {
-    icon: "fa-solid fa-font",
-    label: "Paragraph",
-    value: "paragraph",
-  },
-  {
-    icon: "fa-solid fa-font",
-    label: "RichText",
-    value: "richtext",
-  },
-  {
-    icon: "fa-solid fa-anchor",
-    label: "iframe",
-    value: "iframe",
-  },
-  {
-    icon: "fa-solid fa-minus",
-    label: "Delimiter",
-    value: "delimiter",
-  },
-];
-
 // close menu when click outside
 let loaded = false; // orevent first click
 const handleOutsieClick = (event: any) => {
-  // console.log(event);
-  // console.log(loaded);
   if (loaded) {
     event.stopPropagation();
     emit("close", true);
@@ -91,6 +66,10 @@ onMounted(() => {
 onUnmounted(() => {
   document.body.removeEventListener('click', handleOutsieClick);
 });
+
+window.onscroll = function () {
+  emit("close", true);
+}
 </script>
 
 <style scoped>

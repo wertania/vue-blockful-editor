@@ -1,28 +1,19 @@
 <template>
+  <!-- debug: show index -->
   <div v-if="debug">{{ "i: " + index }}</div>
 
-  <AddMenu :top="posMenuTop" :left="posMenuLeft" v-if="showAddMenu" @close="showAddMenu = false"
-    @add="addItem($event)" />
+  <!-- fixed position menu to add elemens -->
+  <AddMenu :top="posMenuTop" :left="posMenuLeft" v-if="!readOnly && showAddMenu" @close="showAddMenu = false"
+    @add="addItem($event)" :blocksToAdd="blocksToAdd" />
 
-  <EditMenu :top="posMenuTop" :left="posMenuLeft" v-if="showEditMenu" @close="showEditMenu = false"
-    @drop="emit('drop', true)" v-model="blockVar" />
+  <!-- fixed position menu to edit elemens -->
+  <EditMenu :top="posMenuTop" :left="posMenuLeft" v-if="!readOnly && showEditMenu" @close="showEditMenu = false"
+    @drop="emit('drop', true)" v-model="blockVar" :customEntriesEditMenu="customEntriesEditMenu" />
 
-  <!-- MAIN ENTRY BLOCK -->
-  <div class="flex" :class="{
-    'mb-1': blockVar.style.spaceBottom === 1,
-    'mb-2': blockVar.style.spaceBottom === 2,
-    'mb-3': blockVar.style.spaceBottom === 3,
-    'mb-4': blockVar.style.spaceBottom === 4,
-    'mb-5': blockVar.style.spaceBottom === 5,
-    'mb-6': blockVar.style.spaceBottom === 6,
-    'mt-1': blockVar.style.spaceTop === 1,
-    'mt-2': blockVar.style.spaceTop === 2,
-    'mt-3': blockVar.style.spaceTop === 3,
-    'mt-4': blockVar.style.spaceTop === 4,
-    'mt-5': blockVar.style.spaceTop === 5,
-    'mt-6': blockVar.style.spaceTop === 6,
-  }" @mouseover="toggleBlockButtons($event, true)" @mouseleave="toggleBlockButtons($event, false)">
-    <!-- TOOLBAR -->
+  <!-- MAIN ENTRY BLOCK in Editor Mode -->
+  <div v-if="!readOnly" class="flex" :class="marginTop, marginBottom" @mouseover="toggleBlockButtons($event, true)"
+    @mouseleave="toggleBlockButtons($event, false)">
+    <!-- EDIT COLUMN -->
     <div class="w-1/12 flex items-center h-5">
       <i class="fa-solid fa-plus text-xl w-18 hover:bg-gray-200 hover:rounded" v-if="showBlockButtons"
         @click="openAddMenu($event)" />
@@ -34,42 +25,43 @@
           hover:bg-gray-200 hover:rounded
         " v-if="showBlockButtons" @click="openEditMenu($event)" />
     </div>
-    <!-- BLOCK -->
-    <div :class="{ 'w-11/12': readOnly, 'w-full': !readOnly }">
-      <HeaderBlock v-if="blockVar.type === 'header'" v-model="<BlockHeader>blockVar" :readOnly="false" />
-      <ParagraphBlock v-else-if="blockVar.type === 'paragraph'" v-model="<BlockParagraph>blockVar" :readOnly="false" />
-      <ImageBlock v-else-if="blockVar.type === 'image'" v-model="<BlockImage>blockVar" :readOnly="false" />
-      <EmbedBlock v-else-if="blockVar.type === 'embed'" v-model="<BlockEmbed>blockVar" :readOnly="false" />
-      <DelimiterBlock v-else-if="blockVar.type === 'delimiter'" v-model="<BlockDelimiter>blockVar" :readOnly="false" />
-      <RichTextBlock v-else-if="blockVar.type === 'richtext'" v-model="<BlockRichText>blockVar" :readOnly="false" />
+    <!-- BLOCK COLUMN -->
+    <div class="w-11/12" :class="marginTop, marginBottom">
+      <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin"
+        :readOnly="readOnly" :debug="debug" />
     </div>
   </div>
+
+  <!-- MAIN ENTRY BLOCK in Viewer Mode -->
+  <div v-else class="w-full">
+    <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin" :readOnly="readOnly"
+      :debug="debug" />
+  </div>
+
 </template>
 
 <script setup lang="ts">
 import AddMenu from "./Menu/AddMenu.vue";
 import EditMenu from "./Menu/EditMenu.vue";
-import ParagraphBlock from "./Blocks/ParagraphBlock.vue";
-import HeaderBlock from "./Blocks/HeaderBlock.vue";
-import ImageBlock from "./Blocks/ImageBlock.vue";
-import EmbedBlock from "./Blocks/EmbedBlock.vue";
-import DelimiterBlock from "./Blocks/DelimiterBlock.vue";
-import RichTextBlock from "./Blocks/RichTextBlock.vue";
-
-import { Block, BlockDelimiter, BlockEmbed, BlockHeader, BlockImage, BlockParagraph, BlockRichText, BlockType } from "./../../interfaces/blocks";
-import { ref, watch } from "vue";
+import PluginWrapper from "./PluginWrapper.vue";
+import { UniversalBlock } from "../../interfaces/page";
+import { ref, watch, computed, Component } from "vue";
+import { AddMenuEntry, EditMenuEntry } from "../../interfaces/menu";
+import { BlockPlugin } from "../../interfaces/plugin";
 
 const props = defineProps<{
-  block: Block;
+  block: UniversalBlock;
   index: number;
   readOnly: boolean;
+  plugins: BlockPlugin[];
+  blocksToAdd: AddMenuEntry[];
   debug?: boolean;
+  customEntriesEditMenu: EditMenuEntry[];
 }>();
-const blockVar = ref(props.block);
 
 const emit = defineEmits(["add", "update", "drop"]);
 
-// v-model
+const blockVar = ref(props.block);
 watch(blockVar, () => {
   emit('update', { block: blockVar.value });
 });
@@ -105,9 +97,29 @@ const openEditMenu = (e: MouseEvent) => {
   showEditMenu.value = true;
 };
 
-const addItem = (type: BlockType) => {
-  // forward event to parent and close menu
+const addItem = (type: string) => {
   showAddMenu.value = false;
-  emit("add", { type, index: props.index });
+  emit("add", { type, index: props.index }); // forward event to parent and close menu
 };
+
+// styling
+const marginTop = computed(() => {
+  let margin = 'm-0';
+  if (blockVar.value.style?.spaceTop === 1) margin = 'mt-1';
+  if (blockVar.value.style?.spaceTop === 2) margin = 'mt-2';
+  if (blockVar.value.style?.spaceTop === 3) margin = 'mt-3';
+  if (blockVar.value.style?.spaceTop === 4) margin = 'mt-4';
+  if (blockVar.value.style?.spaceTop === 5) margin = 'mt-5';
+  return margin;
+});
+
+const marginBottom = computed(() => {
+  let margin = 'm-0';
+  if (blockVar.value.style?.spaceBottom === 1) margin = 'mb-1';
+  if (blockVar.value.style?.spaceBottom === 2) margin = 'mb-2';
+  if (blockVar.value.style?.spaceBottom === 3) margin = 'mb-3';
+  if (blockVar.value.style?.spaceBottom === 4) margin = 'mb-4';
+  if (blockVar.value.style?.spaceBottom === 5) margin = 'mb-5';
+  return margin;
+});
 </script>
