@@ -1,8 +1,6 @@
 
 ## Know Issues
 nice-to-have:
-Spalten Widget
-iframe Komponenten erst anzeigen, wenn fertig geladen
 plugin für MD (MIT)
 selectedItem für side-menu (> plotter side-mode > den man dann generell nutzen könnte)
 per tiptap per color highlight ggf Messdas werte rein bekommen?!
@@ -12,6 +10,10 @@ per tiptap per color highlight ggf Messdas werte rein bekommen?!
 - Mitt
 - Tailwind CSS
 - TipTap RichText Editor (Plugin Richtext)
+
+## to do
+- menu effekte
+- "placeholders" in den plugins
 
 ## Image upload
 
