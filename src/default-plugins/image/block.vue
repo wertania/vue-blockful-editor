@@ -20,7 +20,7 @@
                 <div>{{ "File"}}</div>
                 <input type="file" class="ml-2 w-[300px] text-sm" ref="fileInput" />
                 <i class="fa-solid fa-check ml-2 text-2xl cursor-pointer hover:bg-gray-300 rounded"
-                    @click="uploadFileFromInput()" />
+                    @click="uploadFileFromInput()" :disabled="fileInput?.files?.length === 0" />
             </div>
         </div>
     </div>
@@ -117,7 +117,7 @@ const saveWithUrl = async () => {
 
 // styles of displayed image
 const width = computed(() => {
-    const w = props.modelValue.data.width ?? "100%";
+    const w = props.modelValue.data.width ?? "auto";
     return w;
 });
 

@@ -5,6 +5,7 @@ export interface BlockData_Embed {
     height: string;
     width: string;
     align: 'left' | 'center' | 'right';
+    scroll?: 'xy' | 'y' | 'x' | 'no';
 }
 
 export interface BlockEmbed extends UniversalBlock {

@@ -63,13 +63,14 @@ const updateText = (e: Event) => {
     const txt = (e.target as HTMLDivElement).innerText;
     // if (txt === "") txt = "-"; // HACK: prevent empty text since the element will be uneditable with empty text
     text.value = txt;
-    emit("update:modelValue", {
-        ...props.modelValue,
-        data: {
-            ...props.modelValue.data,
-            text: txt,
-        },
-    });
+    props.modelValue.data.text = txt;
+    // emit("update:modelValue", {
+    //     ...props.modelValue,
+    //     data: {
+    //         ...props.modelValue.data,
+    //         text: txt,
+    //     },
+    // });
 };
 
 watch(props.modelValue, () => {

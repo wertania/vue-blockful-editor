@@ -5,7 +5,8 @@
         <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event, i)"
           @drop="dropBlock(i)" @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug" :plugins="plugins"
           :blocksToAdd="blocksToAdd" :customEntriesEditMenu="customEntriesEditMenu"
-          :showAllBlockControls="showAllBlockControls" @move="movePosition($event, i)" :uploadSettings="uploadSettings" />
+          :showAllBlockControls="showAllBlockControls" @move="movePosition($event, i)"
+          :uploadSettings="uploadSettings" />
       </div>
     </div>
   </div>
@@ -63,7 +64,9 @@ blocksToAdd.sort((a, b) => a.label.localeCompare(b.label));
 const defineEmptyBlock = (type: string) => {
   const plugin = props.plugins.find(p => p.name === type);
   if (!plugin) throw new Error(`Plugin ${type} not found`);
-  return plugin.emptyBlock();
+  const item = plugin.emptyBlock();
+  // deep copy
+  return JSON.parse(JSON.stringify(item));
 };
 const addBlock = (data: { type?: string, index: number, block?: UniversalBlock }, index: number) => {
   if (data.type) {

@@ -24,6 +24,6 @@ export default <BlockPlugin>{
             icon: 'fa-solid fa-code',
             label: 'Plain HTML',
         },
-        editMenu: MenuExtEdit,
+        editMenuTemplate: MenuExtEdit,
     }
 };

@@ -21,12 +21,15 @@
                 v-model.number="width" />
             {{ widthMode }}
         </li>
+        <!-- clear -->
+        <MenuButton label="Clear Image" @click="modelValue.data.src = ''" />
     </ul>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { BlockImage } from "./types";
+import MenuButton from "./../../components/Editor/Menu/MenuButton.vue";
 
 const props = defineProps<{
     modelValue: BlockImage;

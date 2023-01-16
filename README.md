@@ -1,9 +1,5 @@
 
 ## Know Issues
-
-bug:
-eintellen von SRC für image und embed
-
 nice-to-have:
 Spalten Widget
 iframe Komponenten erst anzeigen, wenn fertig geladen
@@ -15,7 +11,7 @@ per tiptap per color highlight ggf Messdas werte rein bekommen?!
 - Vue3
 - Mitt
 - Tailwind CSS
-- TipTap RichText Editor
+- TipTap RichText Editor (Plugin Richtext)
 
 ## Image upload
 

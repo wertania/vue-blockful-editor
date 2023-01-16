@@ -35,12 +35,19 @@
 
       <div class="bg-gray-400 rounded p-2 mt-2 cursor-pointer" draggable="true" @dragstart="onDrag($event)">Test Element
         to
-        drag</div>
+        drag
+      </div>
+
+      <div class="mt-3">
+        <input type="file" class="w-[300px] text-sm" ref="fileInput" />
+        <button class="w-[100px] text-sm text-center bg-gray-400 rounded p-1 mt-1" @click="loadPage()">Open</button>
+        <button class="w-[100px] text-sm text-center bg-gray-400 rounded p-1 mt-1" @click="savePage()">Save</button>
+      </div>
     </div>
 
     <!-- editor component -->
     <div class="w-10/12">
-      <BlockEditor v-model="demoContent" :readOnly="readOnly" :debug="debug" :plugins="plugins"
+      <BlockEditor v-model="page" :readOnly="readOnly" :debug="debug" :plugins="plugins"
         :showAllBlockControls="showAllBlockControls" :uploadSettings="uploadSettings" />
     </div>
   </div>
@@ -98,6 +105,30 @@ const uploadSettings = ref(<UploadSettings>{
   uploadFunction: uploadFileToDevServer,
 });
 
+const fileInput = ref<HTMLInputElement | null>(null);
+const loadPage = async () => {
+  if (fileInput.value) {
+    const file = fileInput.value.files?.[0];
+    // console.log(file);
+    if (file) {
+      const r = await fetch(URL.createObjectURL(file));
+      const p = await r.json();
+      // console.log(p);
+      page.value = p;
+    }
+  }
+};
+
+const savePage = async () => {
+  const p = page.value;
+  const blob = new Blob([JSON.stringify(p)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "page.json";
+  link.click();
+}
+
 // send some data to the editor with drag and drop
 const onDrag = (event: DragEvent) => {
   const data: BlockImage = {
@@ -120,8 +151,6 @@ const onDrag = (event: DragEvent) => {
 
 // show some data in the editor
 const demoContent = ref(<BlockPage>{
-  creator: "Björn Enders",
-  title: "A demo page",
   style: {
     padding: {
       top: "30px",
@@ -142,16 +171,6 @@ const demoContent = ref(<BlockPage>{
       style: {
         spaceTop: 1,
         spaceBottom: 3,
-      },
-    },
-    {
-      type: "image",
-      data: {
-        src: "",
-      },
-      style: {
-        spaceTop: 0,
-        spaceBottom: 1,
       },
     },
     {
@@ -205,4 +224,7 @@ const demoContent = ref(<BlockPage>{
     },
   ],
 });
+
+const page = ref(demoContent);
+
 </script>

@@ -30,7 +30,6 @@
 <script setup lang="ts">
 import { BlockParagraph } from './types';
 
-
 const props = defineProps<{
     modelValue: BlockParagraph;
 }>();

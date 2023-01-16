@@ -22,10 +22,8 @@
     </div>
 
     <!-- close button -->
-    <div class="bg-gray-200 hover:bg-gray-100 rounded cursor-pointer p-1 text-sm mt-2" @click="emit('close', true)">
-      <i class="fa-solid fa-check"></i>
-      <span class="ml-2">{{ "Close"}}</span>
-    </div>
+    <MenuButton label="Close" @click="emit('close', true)" />
+
   </div>
 </template>
 
@@ -33,6 +31,7 @@
 import { computed, ref, onUnmounted, onMounted } from "vue";
 import { EditMenuEntry } from "../../../interfaces/menu";
 import { UniversalBlock } from "../../../interfaces/page";
+import MenuButton from "./MenuButton.vue";
 
 const emit = defineEmits(["close", "drop"]);
 

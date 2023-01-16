@@ -26,6 +26,6 @@ export default <BlockPlugin>{
             icon: 'fa-solid fa-paragraph',
             label: 'Paragraph',
         },
-        editMenu: MenuExtEdit,
+        editMenuTemplate: MenuExtEdit,
     }
 };
