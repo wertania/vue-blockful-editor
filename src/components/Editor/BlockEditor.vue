@@ -2,9 +2,9 @@
   <div id="page-editor" @scroll="emitter.emit('hide-controls')">
     <div id="page-container">
       <div id="page" class="shadow-2xl">
-        <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event, i)"
-          @drop="dropBlock(i)" @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug" :plugins="plugins"
-          :blocksToAdd="blocksToAdd" :customEntriesEditMenu="customEntriesEditMenu"
+        <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event)"
+          @drop="dropBlock(i)" @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug"
+          :plugins="allPlugins" :blocksToAdd="blocksToAdd" :customEntriesEditMenu="customEntriesEditMenu"
           :showAllBlockControls="showAllBlockControls" @move="movePosition($event, i)"
           :uploadSettings="uploadSettings" />
       </div>
@@ -15,11 +15,13 @@
 <script setup lang="ts">
 import { ref, computed, watch, Component } from "vue";
 import { AddMenuEntry, EditMenuEntry } from "../../interfaces/menu";
+import { BlockColumns } from "../../interfaces/columns";
 import { BlockPage, UniversalBlock } from "../../interfaces/page";
 import { BlockPlugin } from "../../interfaces/plugin";
 import BlockElement from "./BlockElement.vue";
 import { emitter } from "./../../services/emitter";
 import { UploadSettings } from "../../interfaces/upload";
+import columnsPlugin from "./dummy-plugins/columns";
 
 const props = defineProps<{
   modelValue: BlockPage;
@@ -30,6 +32,9 @@ const props = defineProps<{
   uploadSettings?: UploadSettings;
 }>();
 const emit = defineEmits(['update:modelValue']);
+
+// add native function columns
+const allPlugins: BlockPlugin[] = props.plugins.concat(columnsPlugin);
 
 const page = ref(props.modelValue);
 watch(props, () => {
@@ -42,37 +47,51 @@ watch(page, () => {
 // create addMenu and editMenu entries (fixed)
 const blocksToAdd: AddMenuEntry[] = [];
 const customEntriesEditMenu: EditMenuEntry[] = [];
-if (props.plugins) {
-  props.plugins.forEach(plugin => {
-    // add entry to addMenu
-    if (plugin.menuExtension?.addMenuEntry) blocksToAdd.push({
-      value: plugin.name,
-      label: plugin.menuExtension.addMenuEntry.label,
-      icon: plugin.menuExtension.addMenuEntry.icon,
-    })
-    // add entry to editMenu
-    if (plugin.menuExtension?.editMenuTemplate) customEntriesEditMenu.push({
-      name: plugin.name,
-      template: plugin.menuExtension.editMenuTemplate,
-    });
+
+allPlugins.forEach(plugin => {
+  // add entry to addMenu
+  if (plugin.menuExtension?.addMenuEntry) blocksToAdd.push({
+    value: plugin.name,
+    label: plugin.menuExtension.addMenuEntry.label,
+    icon: plugin.menuExtension.addMenuEntry.icon,
+  })
+  // add entry to editMenu
+  if (plugin.menuExtension?.editMenuTemplate) customEntriesEditMenu.push({
+    name: plugin.name,
+    template: plugin.menuExtension.editMenuTemplate,
   });
-}
+});
+
 // sort by label
 blocksToAdd.sort((a, b) => a.label.localeCompare(b.label));
 
 // handle add/drop/update block
 const defineEmptyBlock = (type: string) => {
-  const plugin = props.plugins.find(p => p.name === type);
+  const plugin = allPlugins.find(p => p.name === type);
   if (!plugin) throw new Error(`Plugin ${type} not found`);
   const item = plugin.emptyBlock();
   // deep copy
   return JSON.parse(JSON.stringify(item));
 };
-const addBlock = (data: { type?: string, index: number, block?: UniversalBlock }, index: number) => {
+
+/**
+ * add a new block by row and column index
+ * or add a block by block object 
+ */
+const addBlock = (data: { type?: string; rowIndex: number; colIndex: number; childIndex: number; block?: UniversalBlock }) => {
   if (data.type) {
-    page.value.blocks.splice(index + 1, 0, defineEmptyBlock(data.type));
+    // add to column
+    if (data.colIndex > -1 && data.childIndex > -1) {
+      // add a new item in the block list of the column
+      const item = page.value.blocks[data.rowIndex] as BlockColumns;
+      item.data.columns[data.colIndex].data.blocks.splice(data.childIndex + 1, 0, defineEmptyBlock(data.type));
+    }
+    // add new row
+    else {
+      page.value.blocks.splice(data.rowIndex + 1, 0, defineEmptyBlock(data.type));
+    }
   } else if (data.block) {
-    page.value.blocks.splice(index + 1, 0, data.block);
+    page.value.blocks.splice(data.rowIndex + 1, 0, data.block);
   }
 };
 const dropBlock = (index: number) => {

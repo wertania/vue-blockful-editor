@@ -46,12 +46,44 @@
       </div>
 
     </div>
-    <!-- BLOCK COLUMN -->
+    <!-- RENDER BLOCK(S) -->
+    <!-- main column. width depends on mode readOnly -->
     <div :class="{ 'w-11/12': !readOnly, 'w-full': readOnly, marginTop: true, marginBottom: true }"
       @drop="dropItem($event)" @dragover.prevent @dragenter.prevent>
-      <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin"
-        :readOnly="readOnly" :debug="debug"
+
+      <!-- single block mode: means a block will be rendered by its wrapper -->
+      <PluginWrapper v-if="blockVar.type !== 'columns'" v-for="plugin in plugins" :key="plugin.name" v-model="blockVar"
+        :plugin="plugin" :readOnly="readOnly" :debug="debug"
         :uploadSettings="plugin.optionalProperties?.useUploadSettings ? uploadSettings : undefined" />
+
+      <!-- column mode: means a list of columns and blocks will be rendered -->
+      <div v-if="blockVar.type === 'columns'" class="grid gap-1" :class="{
+        'grid-cols-1': blockVar.data.columns.length === 1,
+        'grid-cols-2': blockVar.data.columns.length === 2,
+        'grid-cols-3': blockVar.data.columns.length === 3,
+        'grid-cols-4': blockVar.data.columns.length === 4,
+        'grid-cols-5': blockVar.data.columns.length === 5,
+        'grid-cols-6': blockVar.data.columns.length === 6,
+      }">
+        <div v-for="column, column_i in blockVar.data.columns" :key="column_i">
+          <!-- nested columns blocks are not possible for now! so check for inner type "columns" -->
+
+          <!-- render all items of column -->
+          <div v-if="column.data.blocks.length > 0" v-for="child, child_i in column.data.blocks">
+            <!-- render wrapper if block for all valid blocks != "empty" -->
+            <PluginWrapper v-if="child.type !== 'columns' && child.type !== 'empty'" v-for="plugin in plugins"
+              :key="plugin.name" :modelValue="child"
+              @update:modelValue="blockVar.data.columns[column_i].data.blocks[child_i] = $event" :plugin="plugin"
+              :readOnly="readOnly" :debug="debug"
+              :uploadSettings="plugin.optionalProperties?.useUploadSettings ? uploadSettings : undefined" />
+          </div>
+          <!-- show placeholder for all empty blocks (empty blocks are column placeholders) -->
+          <NoContentPlaceholder v-else @click="openAddMenu($event, column_i, 0)" />
+
+        </div>
+      </div>
+      <!-- end column mode -->
+
     </div>
   </div>
 </template>
@@ -67,6 +99,7 @@ import { BlockPlugin } from "../../interfaces/plugin";
 import { DragNDropData } from "../../interfaces/dragndrop";
 import { emitter } from "./../../services/emitter";
 import { UploadSettings } from "../../interfaces/upload";
+import NoContentPlaceholder from "./dummy-plugins/NoContentPlaceholder.vue";
 
 const props = defineProps<{
   block: UniversalBlock;
@@ -102,7 +135,7 @@ const toggleBlockButtons = (e: MouseEvent, val?: boolean) => {
   else showBlockButtons.value = !showBlockButtons.value;
 };
 
-const openAddMenu = (e: MouseEvent) => {
+const openAddMenu = (e: MouseEvent, colIndex?: number, childIndex?: number) => {
   showEditMenu.value = false; // close other menu in this component if opened
   emitter.emit("close-other-menus", props.index); // close other menus in editor
 
@@ -111,6 +144,10 @@ const openAddMenu = (e: MouseEvent) => {
   posMenuTop.value = bottom;
   posMenuLeft.value = left;
   showAddMenu.value = true;
+
+  if (colIndex != null) selColAndChild.value[0] = colIndex;
+  if (childIndex != null) selColAndChild.value[1] = childIndex; // childIndex is only set if block is empty (no column
+  else selColAndChild.value = [-1, -1]; // -1 means add block to row (not to column
 };
 
 const openEditMenu = (e: MouseEvent) => {
@@ -124,9 +161,10 @@ const openEditMenu = (e: MouseEvent) => {
   showEditMenu.value = true;
 };
 
-const addItem = (type: string) => {
+let selColAndChild = ref([-1, -1]);
+const addItem = (type: string,) => {
   showAddMenu.value = false;
-  emit("add", { type, index: props.index }); // forward event to parent and close menu
+  emit("add", { type, rowIndex: props.index, colIndex: selColAndChild.value[0], childIndex: selColAndChild.value[1] }); // forward event to parent and close menu
 };
 
 const dropItem = (e: DragEvent) => {
@@ -135,7 +173,7 @@ const dropItem = (e: DragEvent) => {
     const dde = JSON.parse(data) as DragNDropData;
     // console.log("drop data", dde);
     if (dde.type === "block" && dde.action === "add") {
-      emit("add", { block: dde.data, index: props.index });
+      emit("add", { block: dde.data, rowIndex: props.index });
     }
   }
 };

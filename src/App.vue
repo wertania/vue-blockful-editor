@@ -70,6 +70,7 @@ import PluginHeader from "./default-plugins/header";
 import PluginImage from "./default-plugins/image";
 import PluginParagraph from "./default-plugins/paragraph";
 import PluginRichText from "./default-plugins/richtext";
+
 import { BlockImage } from "./default-plugins/image/types";
 import { DragNDropData } from "./interfaces/dragndrop";
 
@@ -171,6 +172,53 @@ const demoContent = ref(<BlockPage>{
       style: {
         spaceTop: 1,
         spaceBottom: 3,
+      },
+    },
+    {
+      type: "columns",
+      data: {
+        columns: [
+          {
+            type: "column",
+            data: {
+              blocks: [
+                {
+                  type: "header",
+                  data: {
+                    text: "Col 1",
+                    level: 3,
+                  },
+                  style: {
+                    spaceTop: 0,
+                    spaceBottom: 0,
+                  },
+                },
+              ]
+            }
+          },
+          {
+            type: "column",
+            data: {
+              blocks: [
+                {
+                  type: "header",
+                  data: {
+                    text: "Col 2",
+                    level: 3,
+                  },
+                  style: {
+                    spaceTop: 0,
+                    spaceBottom: 0,
+                  },
+                },
+              ]
+            }
+          },
+        ]
+      },
+      style: {
+        spaceTop: 1,
+        spaceBottom: 1,
       },
     },
     {
