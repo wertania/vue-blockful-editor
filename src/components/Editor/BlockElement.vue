@@ -51,7 +51,7 @@
       @drop="dropItem($event)" @dragover.prevent @dragenter.prevent>
       <PluginWrapper v-for="plugin in plugins" :key="plugin.name" v-model="blockVar" :plugin="plugin"
         :readOnly="readOnly" :debug="debug"
-        :uploadSettings="plugin.optionalProperties?.uploadSettings ? uploadSettings : undefined" />
+        :uploadSettings="plugin.optionalProperties?.useUploadSettings ? uploadSettings : undefined" />
     </div>
   </div>
 </template>

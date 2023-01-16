@@ -7,7 +7,7 @@
                 {{ "- no image selected -"}}
             </div>
             <div class="m-auto bg-gray-200 hover:bg-gray-300 rounded cursor-pointer p-1 mt-2"
-                @click="uploadClipboard()">
+                @click="uploadFromClipboard()">
                 {{ "Paste from Clipboard"}}
             </div>
             <div class="flex m-auto mt-2">
@@ -29,7 +29,6 @@
 <script setup lang="ts">
 import { watch, ref, computed } from "vue";
 import { BlockImage } from "./types";
-import { uploadFromClipboard } from "./../../services/upload";
 import { UploadSettings } from "../../interfaces/upload";
 
 const props = defineProps<{
@@ -45,24 +44,70 @@ watch(props, () => {
 
 // methods to handle file upload
 const fileInput = ref<HTMLInputElement | null>(null);
+
+/**
+ * get actual timestamp as string in format yyyy_MM_dd__HH_mm_ss
+ */
+const getTimestampAsString = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    return `${year}_${month}_${day}__${hours}_${minutes}_${seconds}`;
+}
+
 const uploadFileFromInput = async () => {
-    if (fileInput.value != null && fileInput.value?.files != null) {
-        const formData = new FormData();
-        formData.append("value", fileInput.value.files[0]);
-        await fetch("http://localhost:3000/upload", {
-            method: "POST",
-            body: formData,
-        });
+    if (fileInput.value != null && fileInput.value?.files != null && props.uploadSettings.uploadFunction != null) {
+        const file = fileInput.value.files[0];
+        // give image to custom upload function
+        // Object.defineProperty(file, 'name', {
+        //     writable: true,
+        //     value: `upload_${getTimestampAsString()}_${file.name}`
+        // });
+        console.log(file);
+        inputUrl.value = await props.uploadSettings.uploadFunction(file);
+        console.log(inputUrl.value);
+        props.modelValue.data.src = inputUrl.value;
+    } else {
+        // if no custom url or function is provided throw error        
+        console.error("No upload function provided or no valid data in file input");
     }
-};
-const uploadClipboard = async () => {
-    if (props.uploadSettings == null) {
-        console.log("No upload settings provided");
-        return;
-    }
-    uploadFromClipboard(props.uploadSettings.url)
 };
 
+const uploadFromClipboard = async () => {
+    if (props.uploadSettings?.uploadFunction != null) {
+        // if a custom upload function is provided, use it
+        // get file from clipboard
+        const clipboardItems = await navigator.clipboard.read();
+        if (clipboardItems[0] == null) {
+            console.error("No item in clipboard");
+            throw new Error("No item in clipboard");
+        }
+        const clipboardItem = clipboardItems[0];
+        // check if file is image
+        if (!clipboardItem.types.includes("image/png")) {
+            console.error("Type of clipboard item is not image/png");
+            throw new Error("Type of clipboard item is not image/png");
+        }
+        // upload file
+        const blob = await clipboardItem.getType("image/png");
+        const file = new File([blob], `upload_${getTimestampAsString()}.png`, {
+            type: blob.type,
+        });
+        // give image to custom upload function
+        inputUrl.value = await props.uploadSettings.uploadFunction(file);
+        console.log(inputUrl.value);
+        props.modelValue.data.src = inputUrl.value;
+    } else {
+        // if no custom url or function is provided throw error        
+        console.error("No upload function provided");
+    }
+};
+
+// directely set url
 const inputUrl = ref("");
 const saveWithUrl = async () => {
     if (inputUrl.value != null && inputUrl.value !== "") {
@@ -70,7 +115,7 @@ const saveWithUrl = async () => {
     }
 };
 
-// styles
+// styles of displayed image
 const width = computed(() => {
     const w = props.modelValue.data.width ?? "100%";
     return w;

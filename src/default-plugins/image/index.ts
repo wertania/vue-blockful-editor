@@ -27,5 +27,8 @@ export default <BlockPlugin>{
             label: 'Image',
         },
         editMenuTemplate: MenuExtEdit,
+    },
+    optionalProperties: {
+        useUploadSettings: true,
     }
 };

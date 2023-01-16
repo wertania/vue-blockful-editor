@@ -33,14 +33,6 @@
         </label>
       </div>
 
-      <div class="flex items-center mt-2">
-        <input id="showAllBlockControls" type="text" v-model="uploadAddress"
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-        <label for="showAllBlockControls" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-          Upload address
-        </label>
-      </div>
-
       <div class="bg-gray-400 rounded p-2 mt-2 cursor-pointer" draggable="true" @dragstart="onDrag($event)">Test Element
         to
         drag</div>
@@ -63,7 +55,7 @@ import { ref } from "vue";
 import BlockEditor from "./components/Editor/BlockEditor.vue";
 import { BlockPage } from "./interfaces/page";
 import { UploadSettings } from "./interfaces/upload";
-// plugins
+// editor plugins
 import PluginPlainHtml from "./default-plugins/plainhtml";
 import PluginDelimiter from "./default-plugins/delimiter";
 import PluginEmbed from "./default-plugins/embed";
@@ -84,19 +76,30 @@ const plugins = [
   PluginRichText,
 ];
 
+// custom function for image upload against dev-server
+const uploadFileToDevServer = async (file: File): Promise<string> => {
+  // get file from clipboard
+  const formData = new FormData();
+  formData.append("file", file);
+  const r = await fetch("http://localhost:3000/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const response = await r.json();
+  // dev server returns an object with the url of the uploaded file
+  return response.url;
+};
+
+// editor parameters
 const readOnly = ref(false);
 const showAllBlockControls = ref(false);
 const debug = ref(false);
-const uploadAddress = ref("http://localhost:3000/upload");
 const uploadSettings = ref(<UploadSettings>{
-  url: uploadAddress.value,
-  formDataKey: "value",
-  // uploadFunction: () => { },
+  uploadFunction: uploadFileToDevServer,
 });
 
-// send some data to the editor
+// send some data to the editor with drag and drop
 const onDrag = (event: DragEvent) => {
-  // console.log("drag", event);
   const data: BlockImage = {
     type: "image",
     data: {
