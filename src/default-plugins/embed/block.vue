@@ -27,7 +27,7 @@
 import { watch, ref, computed } from "vue";
 import { BlockEmbed } from "./types";
 const props = defineProps<{
-    readOnly: Boolean;
+    readOnly: boolean;
     modelValue: BlockEmbed;
 }>();
 

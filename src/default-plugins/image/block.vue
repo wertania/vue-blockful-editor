@@ -32,7 +32,7 @@ import { BlockImage } from "./types";
 import { UploadSettings } from "../../interfaces/upload";
 
 const props = defineProps<{
-    readOnly: Boolean;
+    readOnly: boolean;
     modelValue: BlockImage;
     uploadSettings: UploadSettings;
 }>();

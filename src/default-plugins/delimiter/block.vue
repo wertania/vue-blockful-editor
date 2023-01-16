@@ -7,7 +7,7 @@
 // import { watch } from "vue";
 import { BlockDelimiter } from "./types";
 const props = defineProps<{
-    readOnly: Boolean;
+    readOnly: boolean;
     modelValue: BlockDelimiter;
 }>();
 // watch(props, () => {

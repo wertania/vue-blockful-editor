@@ -44,7 +44,7 @@ import { BlockHeader } from "./types";
 const emit = defineEmits(["update:modelValue"]);
 
 const props = defineProps<{
-    readOnly: Boolean;
+    readOnly: boolean;
     modelValue: BlockHeader;
 }>();
 const text = ref(props.modelValue.data.text);

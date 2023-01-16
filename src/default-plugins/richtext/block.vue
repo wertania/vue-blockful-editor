@@ -110,7 +110,7 @@ import { BlockRichText } from "./types";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps<{
-    readOnly: Boolean;
+    readOnly: boolean;
     modelValue: BlockRichText;
 }>();
 

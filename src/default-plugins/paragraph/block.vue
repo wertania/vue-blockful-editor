@@ -21,7 +21,7 @@ import { BlockParagraph } from "./types";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps<{
-    readOnly: Boolean;
+    readOnly: boolean;
     modelValue: BlockParagraph;
 }>();
 

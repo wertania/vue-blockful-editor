@@ -13,7 +13,7 @@ import { BlockPlainHtml } from "./types";
 const emit = defineEmits(["update:modelValue"]);
 
 const props = defineProps<{
-    readOnly: Boolean;
+    readOnly: boolean;
     modelValue: BlockPlainHtml;
 }>();
 </script>
