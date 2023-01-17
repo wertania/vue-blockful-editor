@@ -1,30 +1,34 @@
+# Vue-Blockful-Editor
 
-## Know Issues
-nice-to-have:
-plugin für MD (MIT)
-selectedItem für side-menu (> plotter side-mode > den man dann generell nutzen könnte)
-per tiptap per color highlight ggf Messdas werte rein bekommen?!
+A small block editor library for Vue3.
+All blocks are rendered by Block-Plugins which can be extended for custom projects.
 
-## Depencies
-- Vue3
-- Mitt
-- Tailwind CSS
-- TipTap RichText Editor (Plugin Richtext)
+## Blocks
 
-## to do
-- menu effekte
-- "placeholders" in den plugins
+Each "Block" item is a Plugin which delivers a "viewer" mode and "editor" mode.
+Custom Plugins can be implemented very easy.
 
-## Image upload
+Out of the box Vue-Blockful-Editor has these Block Plugins:
+- Paragraph
+- Delimiter
+- Embed (iFrame)
+- Header (h1,h2,h3,h4,h5,h6)
+- Paragraph (text-size: 1-5, align: center, left, right)
+- plainhtml (code)
+- RichText (based on TipTap)
 
-Images must be uploaded by a custom function which returns the new URL of the image as an URL.
+## Images
+
+Images can be added in three ways: upload by clipboard, upload by File or only give a URL as Link.
+
+### Image upload
+
+Images must be uploaded by a custom function which returns the new URL of the image as an URL<string>.
 ```
 /**
  * demo function to upload a file to a server
- * upload directly from clipboard to server url via FormData
  */
-export const uploadFromClipboard = async (file: Blob): Promise<string> => {
-    // get file from clipboard
+export const uploadCustomFunction = async (file: Blob): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
     const r = await fetch("http://localhost:3000/upload", {
@@ -35,11 +39,4 @@ export const uploadFromClipboard = async (file: Blob): Promise<string> => {
     // dev server returns an object with the url of the uploaded file
     return response.url;
 };
-```
-
-## Development server for image update
-
-Litte dev server to test image upload via FormData.
-```
-node .\dev-server\index.cjs
 ```
