@@ -5,6 +5,7 @@
 - TipTap color highlighing
 - Menu effects (tailwind)
 - Placeholders for all empty blocks
+- deploy types "npm i --save-dev @types/vue-blockful-editor"
 
 ## Depencies
 - Vue3

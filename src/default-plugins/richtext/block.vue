@@ -155,7 +155,7 @@ watch(() => props.readOnly, (value) => {
 <style lang="postcss">
 /* Basic editor styles */
 .test {
-    @nest p {
+    & p {
         margin: 0;
     }
 }
