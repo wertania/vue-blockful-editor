@@ -15,7 +15,7 @@
         <label for="debug" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
           Debug Mode
         </label>
-      </div>
+      </div>      
 
       <div class="flex items-center mt-2">
         <input id="readOnly" type="checkbox" v-model="readOnly"
@@ -224,7 +224,7 @@ const demoContent = ref(<BlockPage>{
     {
       type: "richtext",
       data: {
-        html: "<p>Hi there. I´m vue-blockful-editor!</p>",
+        html: "<p>Hi there. I´m your vue-blockful-editor!</p>",
       },
       style: {
         spaceTop: 0,
