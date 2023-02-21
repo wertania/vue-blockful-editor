@@ -1,37 +1,38 @@
 <template>
-    <div class="w-full flex" :class="
-        {
-            'justify-start': align === 'left',
-            'justify-center': align === 'center',
-            'justify-end': align === 'right',
-        }
-    ">
-        {{ html }}
-    </div>
+  <div
+    class="w-full flex"
+    :class="{
+      'justify-start': align === 'left',
+      'justify-center': align === 'center',
+      'justify-end': align === 'right',
+    }"
+  >
+    {{ html }}
+  </div>
 </template>
 
 <script setup lang="ts">
-import { watch, ref, computed } from "vue";
-import { BlockPlainHtml } from "./types";
+import { watch, ref, computed } from 'vue';
+import { BlockPlainHtml } from './types';
 
 const props = defineProps<{
-    modelValue: BlockPlainHtml;
+  modelValue: BlockPlainHtml;
 }>();
 
 const html = ref(props.modelValue.data.html);
 watch(props, () => {
-    html.value = props.modelValue.data.html;
+  html.value = props.modelValue.data.html;
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue']);
 watch(html, () => {
-    emit("update:modelValue", {
-        ...props.modelValue,
-        data: {
-            ...props.modelValue.data,
-            html: html.value,
-        },
-    });
+  emit('update:modelValue', {
+    ...props.modelValue,
+    data: {
+      ...props.modelValue.data,
+      html: html.value,
+    },
+  });
 });
 
 // self style
@@ -45,7 +46,7 @@ watch(html, () => {
 //     return h;
 // });
 
-const align = "center";
+const align = 'center';
 // const align = computed(() => {
 //     return props.modelValue.data.align ?? "left";
 // });

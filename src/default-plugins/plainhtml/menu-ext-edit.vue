@@ -1,12 +1,12 @@
 <template>
-    <!-- NOTHING TO DO HERE-->
-    <div>---</div>
+  <!-- NOTHING TO DO HERE-->
+  <div>---</div>
 </template>
 
 <script setup lang="ts">
-import { BlockPlainHtml } from "./types";
+import { BlockPlainHtml } from './types';
 
 const props = defineProps<{
-    modelValue: BlockPlainHtml;
+  modelValue: BlockPlainHtml;
 }>();
 </script>

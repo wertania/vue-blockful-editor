@@ -1,10 +1,10 @@
-import { UniversalBlock } from "../../interfaces/page";
+import { UniversalBlock } from '../../interfaces/page';
 
 export interface BlockData_PlainHtml {
-    html: string;
+  html: string;
 }
 
 export interface BlockPlainHtml extends UniversalBlock {
-    type: 'plainhtml';
-    data: BlockData_PlainHtml;
+  type: 'plainhtml';
+  data: BlockData_PlainHtml;
 }
