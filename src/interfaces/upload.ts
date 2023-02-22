@@ -1,4 +1,3 @@
-
 export interface UploadSettings {
-    uploadFunction?: (file: Blob) => Promise<string>;
+  uploadFunction?: (file: Blob) => Promise<string>;
 }

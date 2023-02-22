@@ -1,10 +1,10 @@
-import { UniversalBlock } from "../../interfaces/page";
+import { UniversalBlock } from '../../interfaces/page';
 
 export interface BlockData_Delimiter {
-    // no data
+  // no data
 }
 
 export interface BlockDelimiter extends UniversalBlock {
-    type: 'delimiter';
-    data: BlockData_Delimiter;
+  type: 'delimiter';
+  data: BlockData_Delimiter;
 }

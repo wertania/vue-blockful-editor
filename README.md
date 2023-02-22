@@ -9,6 +9,7 @@ Each "Block" item is a Plugin which delivers a "viewer" mode and "editor" mode.
 Custom Plugins can be implemented very easy.
 
 Out of the box Vue-Blockful-Editor has these Block Plugins:
+
 - Paragraph
 - Delimiter
 - Embed (iFrame)
@@ -24,6 +25,7 @@ Images can be added in three ways: upload by clipboard, upload by File or only g
 ### Image upload
 
 Images must be uploaded by a custom function which returns the new URL of the image as an URL<string>.
+
 ```
 /**
  * demo function to upload a file to a server
