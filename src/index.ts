@@ -25,3 +25,8 @@ export {
   PluginParagraph,
   PluginRichText,
 };
+
+export * from 'vue-blockful-editor/blocks';
+
+import { BlockDefinitions } from 'vue-blockful-editor/blocks';
+export type BlockType = keyof BlockDefinitions;

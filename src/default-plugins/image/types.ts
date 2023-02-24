@@ -6,7 +6,10 @@ export interface BlockData_Image {
   textAlign?: 'left' | 'center' | 'right';
 }
 
-export interface BlockImage extends UniversalBlock {
-  type: 'image';
-  data: BlockData_Image;
+export type BlockImage = UniversalBlock<'image'>;
+
+declare module 'vue-blockful-editor/blocks' {
+  interface BlockDefinitions {
+    image: BlockData_Image;
+  }
 }

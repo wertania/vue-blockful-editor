@@ -4,7 +4,10 @@ export interface BlockData_Delimiter {
   // no data
 }
 
-export interface BlockDelimiter extends UniversalBlock {
-  type: 'delimiter';
-  data: BlockData_Delimiter;
+export type BlockDelimiter = UniversalBlock<'delimiter'>
+
+declare module 'vue-blockful-editor/blocks' {
+  interface BlockDefinitions {
+    delimiter: BlockData_Delimiter
+  }
 }

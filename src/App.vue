@@ -188,7 +188,7 @@ const onDrag = (event: DragEvent) => {
 };
 
 // show some data in the editor
-const demoContent = ref(<BlockPage>{
+const demoContent = ref<BlockPage>({
   style: {
     padding: {
       top: '30px',
@@ -301,10 +301,18 @@ const demoContent = ref(<BlockPage>{
       type: 'embed',
       data: {
         src: 'https://www.wetter.de/widget/3tage/u1hcy/false/',
+        height: '200px',
       },
       style: {
         spaceTop: 0,
         spaceBottom: 0,
+      },
+    },
+    {
+      type: 'embed',
+      data: {
+        src: 'https://qat-plotter-app.staging.tuk.cloud/messdasApp/plotter/#/plotter?tags=[748]',
+        height: '800px',
       },
     },
   ],
