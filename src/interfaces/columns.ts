@@ -1,15 +1,12 @@
 import { UniversalBlock } from './page';
 
-export interface Column {
-  type: 'column';
-  data: {
-    blocks: UniversalBlock[];
-  };
-}
+export type Column = UniversalBlock<'column'>;
 
-export interface BlockColumns {
-  type: 'columns';
-  data: {
-    columns: Column[];
-  };
+export type BlockColumns = UniversalBlock<'columns'>;
+
+declare module 'vue-blockful-editor/blocks' {
+  interface BlockDefinitions {
+    column: { blocks: UniversalBlock[] };
+    columns: { columns: Column[] };
+  }
 }

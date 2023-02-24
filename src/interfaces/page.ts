@@ -21,7 +21,7 @@ import type { BlockType } from 'src';
 
 type Blocks = {
   [T in BlockType]: {
-    type: T; // type name of the block
+    type: T | 'empty'; // type name of the block
     data: BlockDefinitions[T]; // data depending on the type of the block
     style?: {
       // general style in the main view. no the type depending style
