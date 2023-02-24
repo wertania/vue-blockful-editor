@@ -308,14 +308,6 @@ const demoContent = ref<BlockPage>({
         spaceBottom: 0,
       },
     },
-    {
-      type: 'embed',
-      data: {
-        // src: 'https://qat-plotter-app.staging.tuk.cloud/messdasApp/plotter/#/plotter?tags=[748]',
-        src: 'http://localhost:3000/?chartGroup=279&context=editor',
-        height: '800px',
-      },
-    },
   ],
 });
 
