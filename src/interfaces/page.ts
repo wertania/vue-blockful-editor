@@ -15,9 +15,9 @@ export interface BlockPage {
   };
 }
 
-export interface BlockDefinitions {}
+import type { BlockDefinitions } from 'vue-blockful-editor/blocks';
 
-import type { BlockType } from 'src';
+type BlockType = keyof BlockDefinitions
 
 type Blocks = {
   [T in BlockType]: {

@@ -1,18 +1,24 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-// import { resolve } from 'path';
+import ts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    ts({
+      copyDtsFiles: true,
+    }),
+    vue(),
+  ],
 
   build: {
     lib: {
-      // Could also be a dictionary or array of multiple entry points
-      entry: './src/index.ts',
-      name: 'vue-blockful-editor',
-      // the proper extensions will be added
-      fileName: 'vue-blockful-editor',
+      entry: {
+        index: './src/index.ts',
+        style: './src/style.css',
+      },
+      formats: ['es', 'cjs'],
+      fileName: (format, entry) => `${entry}.${format}.js`,
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled

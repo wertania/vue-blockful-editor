@@ -15,7 +15,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "vue-blockful-editor/blocks": ["./src/interfaces/page.ts"]
+      "vue-blockful-editor": ["./src"],
+      "vue-blockful-editor/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
