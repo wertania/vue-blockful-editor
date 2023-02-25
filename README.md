@@ -9,7 +9,6 @@ Each "Block" item is a Plugin which delivers a "viewer" mode and "editor" mode.
 Custom Plugins can be implemented very easy.
 
 Out of the box Vue-Blockful-Editor has these Block Plugins:
-
 - Paragraph
 - Delimiter
 - Embed (iFrame)
@@ -18,6 +17,47 @@ Out of the box Vue-Blockful-Editor has these Block Plugins:
 - plainhtml (code)
 - RichText (based on TipTap)
 
+## Usage
+
+```
+<template>
+  <BlockEditor v-model="demo" :readOnly="false" :debug="false" :plugins="plugins" :showAllBlockControls="true" />
+</template>
+
+<script setup>
+import { BlockEditor, PluginDelimiter, PluginHeader } from 'vue-blockful-editor';
+
+const plugins = [
+  PluginDelimiter,
+  PluginHeader,
+];
+
+const demo = {
+  blocks: [
+    {
+      type: "header",
+      data: {
+        text: "Hello World!",
+        level: 1,
+      },
+    },
+  ],
+};
+</script>
+
+```
+
+## Properties
+
+```
+modelValue: BlockPage;
+readOnly: boolean;
+plugins: BlockPlugin[];
+debug?: boolean;
+showAllBlockControls?: boolean;
+uploadSettings?: UploadSettings;
+```
+
 ## Images
 
 Images can be added in three ways: upload by clipboard, upload by File or only give a URL as Link.
@@ -25,7 +65,6 @@ Images can be added in three ways: upload by clipboard, upload by File or only g
 ### Image upload
 
 Images must be uploaded by a custom function which returns the new URL of the image as an URL<string>.
-
 ```
 /**
  * demo function to upload a file to a server
