@@ -27,6 +27,7 @@ export {
 };
 
 export * from './interfaces/page';
+export * from './interfaces/plugin';
 
 export * from './default-plugins/delimiter';
 export * from './default-plugins/embed';
