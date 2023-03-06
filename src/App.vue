@@ -80,14 +80,20 @@
 
     <!-- editor component -->
     <div class="w-10/12">
-      <BlockEditor
-        v-model="page"
-        :readOnly="readOnly"
-        :debug="debug"
-        :plugins="plugins"
-        :showAllBlockControls="showAllBlockControls"
-        :uploadSettings="uploadSettings"
-      />
+      <div id="page-editor">
+        <div id="page-container">
+          <div id="page" class="shadow-2xl">
+            <BlockEditor
+              v-model="page"
+              :readOnly="readOnly"
+              :debug="debug"
+              :plugins="plugins"
+              :showAllBlockControls="showAllBlockControls"
+              :uploadSettings="uploadSettings"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -313,3 +319,24 @@ const demoContent = ref<BlockPage>({
 
 const page = ref(demoContent);
 </script>
+
+<style scoped>
+#page-editor {
+  padding-top: 10px;
+  width: 100%;
+  height: 100vh;
+  background: #f8f8f8;
+  overflow-y: scroll;
+}
+
+#page-container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#page {
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 5px;
+}
+</style>

@@ -186,7 +186,7 @@ const posMenuTop = ref(0);
 const posMenuLeft = ref(0);
 
 const toggleBlockButtons = (e: MouseEvent, val?: boolean) => {
-  if (val != null) showBlockButtons.value = val;
+  if (val !== undefined) showBlockButtons.value = val;
   else showBlockButtons.value = !showBlockButtons.value;
 };
 
@@ -200,8 +200,8 @@ const openAddMenu = (e: MouseEvent, colIndex?: number, childIndex?: number) => {
   posMenuLeft.value = left;
   showAddMenu.value = true;
 
-  if (colIndex != null) selColAndChild.value[0] = colIndex;
-  if (childIndex != null) selColAndChild.value[1] = childIndex;
+  if (colIndex !== undefined) selColAndChild.value[0] = colIndex;
+  if (childIndex !== undefined) selColAndChild.value[1] = childIndex;
   // childIndex is only set if block is empty (no column
   else selColAndChild.value = [-1, -1]; // -1 means add block to row (not to column
 };
