@@ -18,9 +18,10 @@
     role="textbox"
     autofocus
     :contenteditable="!readOnly"
-    v-html="text"
     @input="updateText($event)"
-  />
+  >
+    {{ text }}
+  </span>
 </template>
 
 <script setup lang="ts">
@@ -56,6 +57,7 @@ watch(props.modelValue, () => {
 .textarea {
   display: block;
   overflow: hidden;
+  resize: both;
   min-height: 40px;
   line-height: 20px;
 }
