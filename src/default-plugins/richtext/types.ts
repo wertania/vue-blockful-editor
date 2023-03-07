@@ -4,7 +4,10 @@ export interface BlockData_RichText {
   html: string;
 }
 
-export interface BlockRichText extends UniversalBlock {
-  type: 'richtext';
-  data: BlockData_RichText;
+export type BlockRichText = UniversalBlock<'richtext'>;
+
+declare module 'vue-blockful-editor/blocks' {
+  interface BlockDefinitions {
+    richtext: BlockData_RichText;
+  }
 }

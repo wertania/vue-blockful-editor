@@ -3,9 +3,9 @@
   <props.plugin.block
     v-if="props.plugin.name === modelValue.type"
     :modelValue="modelValue"
+    @update:modelValue="$emit('update:modelValue', $event)"
     :readOnly="readOnly"
     :debug="debug"
-    @update=""
     :uploadSettings="uploadSettings"
   />
 </template>

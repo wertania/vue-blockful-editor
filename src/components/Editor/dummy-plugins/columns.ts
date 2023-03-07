@@ -1,6 +1,6 @@
 // native plugin dummy. will be rendered as a special case
 // needed only for menu extensions and empty block creation
-import { UniversalBlock } from '../../../interfaces/page';
+import { BlockPlugin } from 'src/interfaces/plugin';
 import EditMenuExtColumns from './ColumnsEditMenuExt.vue';
 
 const name = 'columns';
@@ -30,4 +30,4 @@ export default {
     },
     editMenuTemplate: EditMenuExtColumns,
   },
-};
+} as BlockPlugin;

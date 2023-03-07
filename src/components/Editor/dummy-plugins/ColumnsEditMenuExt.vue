@@ -41,7 +41,7 @@
 import { UniversalBlock } from '../../../interfaces/page';
 
 const props = defineProps<{
-  modelValue: UniversalBlock;
+  modelValue: UniversalBlock<'columns'>;
 }>();
 
 const updateColumnCount = (count: number) => {

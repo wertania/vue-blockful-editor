@@ -15,13 +15,21 @@ export interface BlockPage {
   };
 }
 
-// main definition of a block
-export interface UniversalBlock {
-  type: string; // type name of the block
-  data: any; // data depending on the type of the block
-  style?: {
-    // general style in the main view. no the type depending style
-    spaceTop?: number;
-    spaceBottom?: number;
+import type { BlockDefinitions } from 'vue-blockful-editor/blocks';
+
+type BlockType = keyof BlockDefinitions
+
+type Blocks = {
+  [T in BlockType]: {
+    type: T | 'empty'; // type name of the block
+    data: BlockDefinitions[T]; // data depending on the type of the block
+    style?: {
+      // general style in the main view. no the type depending style
+      spaceTop?: number;
+      spaceBottom?: number;
+    };
   };
-}
+};
+
+// main definition of a block
+export type UniversalBlock<T extends BlockType = BlockType> = Blocks[T];

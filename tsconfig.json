@@ -11,7 +11,13 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "vue-blockful-editor": ["./src"],
+      "vue-blockful-editor/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

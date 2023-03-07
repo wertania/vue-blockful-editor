@@ -25,3 +25,26 @@ export {
   PluginParagraph,
   PluginRichText,
 };
+
+export * from './interfaces/page';
+export * from './interfaces/plugin';
+
+export * from './default-plugins/delimiter';
+export * from './default-plugins/embed';
+export * from './default-plugins/header';
+export * from './default-plugins/image';
+export * from './default-plugins/paragraph';
+export * from './default-plugins/plainhtml';
+export * from './default-plugins/richtext';
+export * from './interfaces/columns';
+
+export * from './default-plugins/delimiter/types';
+export * from './default-plugins/embed/types';
+export * from './default-plugins/header/types';
+export * from './default-plugins/image/types';
+export * from './default-plugins/paragraph/types';
+export * from './default-plugins/plainhtml/types';
+export * from './default-plugins/richtext/types';
+
+import { BlockDefinitions } from 'vue-blockful-editor/blocks';
+export type BlockType = keyof BlockDefinitions;

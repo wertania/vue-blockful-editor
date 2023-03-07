@@ -118,7 +118,8 @@
               :key="plugin.name"
               :modelValue="child"
               @update:modelValue="
-                blockVar.data.columns[column_i].data.blocks[child_i] = $event
+                if (blockVar.type === 'columns')
+                  blockVar.data.columns[column_i].data.blocks[child_i] = $event;
               "
               :plugin="plugin"
               :readOnly="readOnly"
@@ -200,9 +201,8 @@ const openAddMenu = (e: MouseEvent, colIndex?: number, childIndex?: number) => {
   showAddMenu.value = true;
 
   if (colIndex != null) selColAndChild.value[0] = colIndex;
-  if (childIndex != null)
-    selColAndChild.value[1] =
-      childIndex; // childIndex is only set if block is empty (no column
+  if (childIndex != null) selColAndChild.value[1] = childIndex;
+  // childIndex is only set if block is empty (no column
   else selColAndChild.value = [-1, -1]; // -1 means add block to row (not to column
 };
 
