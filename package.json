@@ -8,7 +8,7 @@
     "dist"
   ],
   "module": "./dist/index.es.js",
-  "main": "./dist/index.cjs.cjs",
+  "main": "./dist/index.cjs.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
