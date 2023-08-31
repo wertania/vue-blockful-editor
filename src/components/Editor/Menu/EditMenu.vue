@@ -17,6 +17,7 @@
         v-if="entry.name === modelValue.type"
         :is="entry.template"
         v-model="block"
+        @close="emit('close', true)"
       />
     </div>
 
