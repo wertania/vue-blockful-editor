@@ -3,6 +3,14 @@
 A small block editor library for Vue3.
 All blocks are rendered by Block-Plugins which can be extended for custom projects.
 
+## Installation
+
+Needs Font-Awesome
+```
+npm install vue-blockful-editor
+npm install @fortawesome/fontawesome-svg-core
+```
+
 ## Blocks
 
 Each "Block" item is a Plugin which delivers a "viewer" mode and "editor" mode.
