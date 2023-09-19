@@ -1,21 +1,8 @@
 <template>
-  <BlockElement
-    v-for="(block, i) of page.blocks"
-    :key="i"
-    :block="block"
-    :index="i"
-    @add="addBlock($event)"
-    @drop="dropBlock(i)"
-    @update="updateBlock($event, i)"
-    :readOnly="readOnly"
-    :debug="debug"
-    :plugins="allPlugins"
-    :blocksToAdd="blocksToAdd"
-    :customEntriesEditMenu="customEntriesEditMenu"
-    :showAllBlockControls="showAllBlockControls"
-    @move="movePosition($event, i)"
-    :uploadSettings="uploadSettings"
-  />
+  <BlockElement v-for="(block, i) of page.blocks" :key="i" :block="block" :index="i" @add="addBlock($event)"
+    @drop="dropBlock(i)" @update="updateBlock($event, i)" :readOnly="readOnly" :debug="debug" :plugins="allPlugins"
+    :blocksToAdd="blocksToAdd" :customEntriesEditMenu="customEntriesEditMenu" :showAllBlockControls="showAllBlockControls"
+    @move="movePosition($event, i)" :uploadSettings="uploadSettings" />
 </template>
 
 <script setup lang="ts">
@@ -35,11 +22,12 @@ const props = defineProps<{
   debug?: boolean;
   showAllBlockControls?: boolean;
   uploadSettings?: UploadSettings;
+  disableColumns?: boolean;
 }>();
 const emit = defineEmits(['update:modelValue']);
 
 // add native function columns
-const allPlugins: BlockPlugin[] = props.plugins.concat(columnsPlugin);
+const allPlugins: BlockPlugin[] = props.disableColumns ? props.plugins : props.plugins.concat(columnsPlugin);
 
 const page = computed({
   get: () => props.modelValue,

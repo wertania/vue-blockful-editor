@@ -90,6 +90,7 @@
               :plugins="plugins"
               :showAllBlockControls="showAllBlockControls"
               :uploadSettings="uploadSettings"
+              :disableColumns="false"
             />
           </div>
         </div>
