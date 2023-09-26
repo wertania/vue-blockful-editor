@@ -6,10 +6,6 @@
     <h6 class="mb-2 font-semibold text-gray-900 dark:text-white">
       {{ 'Edit' }}
     </h6>
-    <!-- <MenuParamsEmbedBlock v-if="modelValue.type === 'embed'" v-model="<BlockEmbed>block" />
-    <MenuParamsParagraphBlock v-else-if="modelValue.type === 'paragraph'" v-model="<BlockParagraph>block" />
-    <MenuParamsHeaderBlock v-else-if="modelValue.type === 'header'" v-model="<BlockHeader>block" />
-    <MenuParamsImageBlock v-else-if="modelValue.type === 'image'" v-model="<BlockImage>block" /> -->
 
     <!-- custom entries -->
     <div v-for="entry in customEntriesEditMenu" :key="entry.name">
@@ -36,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onUnmounted, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import { EditMenuEntry } from '../../../interfaces/menu';
 import { UniversalBlock } from '../../../interfaces/page';
 import MenuButton from './MenuButton.vue';
@@ -57,7 +53,6 @@ const editMenu = ref(null);
 
 const topPx = computed(() => {
   if (editMenu.value != null) {
-    const wH = window.innerHeight;
     const menu: HTMLElement = editMenu.value;
     if (props.top + menu.offsetHeight > window.innerHeight) {
       return `${window.innerHeight - menu.offsetHeight}px`;
@@ -66,30 +61,8 @@ const topPx = computed(() => {
     }
   }
 });
+
 const leftPx = computed(() => `${props.left}px`);
-
-// close menu
-let loaded = false; // orevent first click
-const handleOutsieClick = (event: any) => {
-  // console.log(event);
-  // console.log(loaded);
-  if (loaded) {
-    event.stopPropagation();
-    emit('close', true);
-  }
-  loaded = true;
-};
-
-// onMounted(() => {
-//   document.body.addEventListener('click', handleOutsieClick);
-// });
-
-// onUnmounted(() => {
-//   document.body.removeEventListener('click', handleOutsieClick);
-// });
-window.onscroll = function () {
-  emit('close', true);
-};
 </script>
 
 <style scoped>
