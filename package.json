@@ -2,7 +2,7 @@
   "name": "vue-blockful-editor",
   "private": false,
   "license": "MIT",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "type": "module",
   "files": [
     "dist"
@@ -16,11 +16,16 @@
       "require": "./dist/index.cjs.js",
       "types": "./dist/index.d.ts"
     },
-    "./style.css": "./dist/style.css"
+    "./blocks": {
+      "types": "./dist/blocks.d.ts"
+    },
+    "./style.css": "./dist/style.css",
+    "./style-mixin.scss": "./dist/style-mixin.scss"
   },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
+    "postbuild": "node ./scripts/post-build.mjs",
     "preview": "vite preview",
     "format": "prettier --write ."
   },
@@ -40,8 +45,8 @@
     "prettier": "^2.8.4",
     "tailwindcss": "^3.2.4",
     "typescript": "^4.9.3",
-    "vite": "^4.0.0",
-    "vite-plugin-dts": "^3.5.3",
+    "vite": "^4.4.9",
+    "vite-plugin-dts": "^3.6.0",
     "vue-tsc": "^1.0.11"
   }
 }
