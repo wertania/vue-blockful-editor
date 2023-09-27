@@ -46,7 +46,7 @@ watch(html, () => {
 //     return h;
 // });
 
-const align = 'center';
+const align: string = 'center';
 // const align = computed(() => {
 //     return props.modelValue.data.align ?? "left";
 // });
