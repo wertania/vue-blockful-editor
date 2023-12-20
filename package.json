@@ -2,7 +2,7 @@
   "name": "vue-blockful-editor",
   "private": false,
   "license": "MIT",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "type": "module",
   "files": [
     "dist"
