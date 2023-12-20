@@ -17,10 +17,11 @@ export interface BlockPage {
 
 import type { BlockDefinitions } from 'vue-blockful-editor/blocks';
 
-type BlockType = keyof BlockDefinitions
+type BlockType = keyof BlockDefinitions;
 
 type Blocks = {
   [T in BlockType]: {
+    key?: string;
     type: T | 'empty'; // type name of the block
     data: BlockDefinitions[T]; // data depending on the type of the block
     style?: {

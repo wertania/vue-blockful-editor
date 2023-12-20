@@ -2,7 +2,7 @@
   <div class="vbe">
     <BlockElement
       v-for="(block, i) of page.blocks"
-      :key="i"
+      :key="block.key"
       :block="block"
       :index="i"
       @add="addBlock($event)"
@@ -39,6 +39,14 @@ const props = defineProps<{
   uploadSettings?: UploadSettings;
   disableColumns?: boolean;
 }>();
+
+const generateUniqueKey = () =>
+  Math.floor(Math.random() * 0xffffffff).toString(16);
+
+props.modelValue.blocks.forEach((block) => {
+  block.key = generateUniqueKey();
+});
+
 const emit = defineEmits(['update:modelValue']);
 
 // add native function columns
@@ -79,6 +87,9 @@ const defineEmptyBlock = (type: string) => {
   const plugin = allPlugins.find((p) => p.name === type);
   if (!plugin) throw new Error(`Plugin ${type} not found`);
   const item = plugin.emptyBlock();
+
+  item.key = generateUniqueKey();
+
   // deep copy
   return JSON.parse(JSON.stringify(item));
 };
@@ -114,6 +125,8 @@ const addBlock = (data: {
       );
     }
   } else if (data.block) {
+    data.block.key = generateUniqueKey();
+
     page.value.blocks.splice(data.rowIndex + 1, 0, data.block);
   }
 };

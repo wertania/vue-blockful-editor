@@ -1,6 +1,6 @@
 <template>
   <!-- debug: show index -->
-  <div v-if="debug">{{ 'i: ' + index }}</div>
+  <div v-if="debug" :data-block-key="block.key">{{ 'i: ' + index }}</div>
 
   <!-- fixed position menu to add elemens -->
   <AddMenu
