@@ -4,7 +4,7 @@
       class="w-full"
       :class="textAlign"
       role="textbox"
-      autofocus
+      ref="spanElement"
       :contenteditable="!readOnly"
       @input="updateText($event)"
     >
@@ -16,7 +16,7 @@
       class="w-full"
       :class="textAlign"
       role="textbox"
-      autofocus
+      ref="spanElement"
       :contenteditable="!readOnly"
       @input="updateText($event)"
     >
@@ -28,7 +28,7 @@
       class="w-full"
       :class="textAlign"
       role="textbox"
-      autofocus
+      ref="spanElement"
       :contenteditable="!readOnly"
       @input="updateText($event)"
     >
@@ -40,7 +40,7 @@
       class="w-full"
       :class="textAlign"
       role="textbox"
-      autofocus
+      ref="spanElement"
       :contenteditable="!readOnly"
       @input="updateText($event)"
     >
@@ -52,7 +52,7 @@
       class="w-full"
       :class="textAlign"
       role="textbox"
-      autofocus
+      ref="spanElement"
       :contenteditable="!readOnly"
       @input="updateText($event)"
     >
@@ -64,7 +64,7 @@
       class="w-full"
       :class="textAlign"
       role="textbox"
-      autofocus
+      ref="spanElement"
       :contenteditable="!readOnly"
       @input="updateText($event)"
     >
@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { BlockHeader } from './types';
 
 const emit = defineEmits(['update:modelValue']);
@@ -83,6 +83,9 @@ const props = defineProps<{
   readOnly: boolean;
   modelValue: BlockHeader;
 }>();
+
+const spanElement = ref<HTMLSpanElement | null>(null);
+
 const text = ref(props.modelValue.data.text);
 watch(props, () => {
   text.value = props.modelValue.data.text;
@@ -112,4 +115,9 @@ const updateText = (e: Event) => {
 watch(props.modelValue, () => {
   text.value = props.modelValue.data.text;
 });
+
+// ensure the element is focused after being rendered
+onMounted(() => {
+  spanElement.value?.focus();
+})
 </script>
