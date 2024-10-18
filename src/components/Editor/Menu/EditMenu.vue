@@ -1,6 +1,7 @@
 <template>
   <div
     ref="editMenu"
+    v-click-outside="closeMenu"
     class="fixed left-10 shadow-md bg-white w-[250px] rounded-md p-2 z-50 custom-top"
   >
     <h6 class="mb-2 font-semibold text-gray-900 dark:text-white">
@@ -63,6 +64,10 @@ const topPx = computed(() => {
 });
 
 const leftPx = computed(() => `${props.left}px`);
+
+const closeMenu = () => {
+  emit('close');
+};
 </script>
 
 <style scoped>
