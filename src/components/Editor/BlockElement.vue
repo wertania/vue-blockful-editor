@@ -35,10 +35,12 @@
       <!-- first row: add, edit -->
       <div class="flex w-full" v-if="showBlockButtons || showAllBlockControls">
         <i
+          data-func="openMenu"
           class="fa-solid fa-plus text-xl w-18 ml-0 hover:bg-gray-200 hover:rounded"
           @click="openAddMenu($event)"
         />
         <i
+          data-func="openMenu"
           class="fa-solid fa-wrench text-xl w-18 ml-1 hover:bg-gray-200 hover:rounded"
           @click="openEditMenu($event)"
         />

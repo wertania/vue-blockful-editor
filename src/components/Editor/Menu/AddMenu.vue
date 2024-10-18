@@ -1,6 +1,7 @@
 <template>
   <div
     ref="addMenu"
+    v-click-outside="closeMenu"
     class="fixed left-10 shadow-md bg-white w-[150px] rounded-md p-2 z-50 text-gray-600 custom-top"
   >
     <!--TITLE -->
@@ -31,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const emit = defineEmits(['add', 'close']);
 
@@ -57,26 +58,12 @@ const topPx = computed(() => {
 });
 const leftPx = computed(() => `${props.left}px`);
 
-// close menu when click outside
-let loaded = false; // orevent first click
-const handleOutsieClick = (event: any) => {
-  if (loaded) {
-    event.stopPropagation();
-    emit('close', true);
-  }
-  loaded = true;
-};
-
-onMounted(() => {
-  document.body.addEventListener('click', handleOutsieClick);
-});
-
-onUnmounted(() => {
-  document.body.removeEventListener('click', handleOutsieClick);
-});
-
 window.onscroll = function () {
   emit('close', true);
+};
+
+const closeMenu = () => {
+  emit('close');
 };
 </script>
 
