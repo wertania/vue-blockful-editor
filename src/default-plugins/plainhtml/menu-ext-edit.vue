@@ -1,6 +1,5 @@
 <template>
   <!-- NOTHING TO DO HERE-->
-  <div>---</div>
 </template>
 
 <script setup lang="ts">
