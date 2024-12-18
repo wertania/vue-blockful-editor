@@ -107,19 +107,19 @@ import BlockEditor from './components/Editor/BlockEditor.vue';
 import { BlockPage } from './interfaces/page';
 import { UploadSettings } from './interfaces/upload';
 // editor plugins
-import PluginPlainHtml from './default-plugins/plainhtml';
 import PluginDelimiter from './default-plugins/delimiter';
 import PluginEmbed from './default-plugins/embed';
 import PluginHeader from './default-plugins/header';
 import PluginImage from './default-plugins/image';
 import PluginParagraph from './default-plugins/paragraph';
+import PluginPlainHtml from './default-plugins/plainhtml';
 import PluginRichText from './default-plugins/richtext';
 
 import { BlockImage } from './default-plugins/image/types';
 import { DragNDropData } from './interfaces/dragndrop';
 
 const plugins = [
-  // PluginPlainHtml,
+  PluginPlainHtml,
   PluginDelimiter,
   PluginEmbed,
   PluginHeader,
