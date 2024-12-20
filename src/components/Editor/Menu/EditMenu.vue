@@ -21,7 +21,7 @@
     <!-- delete button -->
     <div
       class="bg-gray-200 hover:bg-gray-100 rounded cursor-pointer p-1 text-sm mt-2"
-      @click="emit('drop', true)"
+      @click="handleDelete"
     >
       <i class="fa-solid fa-trash"></i>
       <span class="ml-2">{{ 'Delete' }}</span>
@@ -38,7 +38,7 @@ import { EditMenuEntry } from '../../../interfaces/menu';
 import { UniversalBlock } from '../../../interfaces/page';
 import MenuButton from './MenuButton.vue';
 
-const emit = defineEmits(['close', 'drop']);
+const emit = defineEmits(['close', 'drop', 'delete']);
 
 const props = defineProps<{
   top: number;
@@ -66,6 +66,24 @@ const topPx = computed(() => {
 const leftPx = computed(() => `${props.left}px`);
 
 const closeMenu = () => {
+  emit('close');
+};
+
+const handleDelete = () => {
+  if (block.value.type === 'columns') {
+    deleteColumn();
+  } else {
+    deleteItem();
+  }
+};
+
+const deleteItem = () => {
+  emit('delete');
+  emit('close');
+};
+
+const deleteColumn = () => {
+  emit('drop');
   emit('close');
 };
 </script>

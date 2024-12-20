@@ -12,15 +12,16 @@
     :blocksToAdd="blocksToAdd"
   />
 
-  <!-- fixed position menu to edit elemens -->
+  <!-- fixed position menu to edit elements -->
   <EditMenu
     :top="posMenuTop"
     :left="posMenuLeft"
-    v-if="!readOnly && showEditMenu"
+    v-if="!readOnly && showEditMenu && editColumnIndex === -1"
     @close="showEditMenu = false"
-    @drop="emit('drop', true)"
+    @drop="deleteBlock"
     v-model="blockVar"
     :customEntriesEditMenu="customEntriesEditMenu"
+    @delete="deleteBlock"
   />
 
   <!-- MAIN ENTRY BLOCK in Editor Mode -->
@@ -92,7 +93,7 @@
       <!-- column mode: means a list of columns and blocks will be rendered -->
       <div
         v-if="blockVar.type === 'columns'"
-        class="grid gap-1"
+        class="grid gap-20"
         :class="{
           'grid-cols-1': blockVar.data.columns.length === 1,
           'grid-cols-2': blockVar.data.columns.length === 2,
@@ -105,6 +106,7 @@
         <div
           v-for="(column, column_i) in blockVar.data.columns"
           :key="column_i"
+          class="relative"
         >
           <!-- nested columns blocks are not possible for now! so check for inner type "columns" -->
 
@@ -132,6 +134,24 @@
                   : undefined
               "
             />
+            <!-- render edit icon for blocks within columns -->
+            <i
+              v-if="showBlockButtons === true"
+              class="fa-solid fa-wrench text-xl absolute top-0 left-[-25px] hover:bg-gray-200 hover:rounded"
+              @click="openEditMenuInColumn($event, column_i, child_i)"
+            />
+
+            <!-- render edit menu for blocks within columns -->
+            <EditMenu
+                :top="posMenuTop"
+                :left="posMenuLeft"
+                v-if="!readOnly && showEditMenu && editColumnIndex === column_i && editBlockIndex === child_i"
+                @close="showEditMenu = false"
+                @drop="emit('drop', true)"
+                v-model="blockVar.data.columns[column_i].data.blocks[child_i]"
+                :customEntriesEditMenu="customEntriesEditMenu"
+                @delete="deleteItem(column_i, child_i)"
+                />
           </div>
           <!-- show placeholder for all empty blocks (empty blocks are column placeholders) -->
           <NoContentPlaceholder
@@ -146,17 +166,17 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue';
+import { DragNDropData } from '../../interfaces/dragndrop';
+import { AddMenuEntry, EditMenuEntry } from '../../interfaces/menu';
+import { UniversalBlock } from '../../interfaces/page';
+import { BlockPlugin } from '../../interfaces/plugin';
+import { UploadSettings } from '../../interfaces/upload';
+import { emitter } from './../../services/emitter';
+import NoContentPlaceholder from './dummy-plugins/NoContentPlaceholder.vue';
 import AddMenu from './Menu/AddMenu.vue';
 import EditMenu from './Menu/EditMenu.vue';
 import PluginWrapper from './PluginWrapper.vue';
-import { UniversalBlock } from '../../interfaces/page';
-import { ref, watch, computed } from 'vue';
-import { AddMenuEntry, EditMenuEntry } from '../../interfaces/menu';
-import { BlockPlugin } from '../../interfaces/plugin';
-import { DragNDropData } from '../../interfaces/dragndrop';
-import { emitter } from './../../services/emitter';
-import { UploadSettings } from '../../interfaces/upload';
-import NoContentPlaceholder from './dummy-plugins/NoContentPlaceholder.vue';
 
 const props = defineProps<{
   block: UniversalBlock;
@@ -170,7 +190,7 @@ const props = defineProps<{
   uploadSettings?: UploadSettings;
 }>();
 
-const emit = defineEmits(['add', 'update', 'drop', 'move']);
+const emit = defineEmits(['add', 'update', 'drop', 'move', 'delete']);
 
 const blockVar = ref(props.block);
 watch(blockVar, () => {
@@ -186,6 +206,8 @@ const showAddMenu = ref(false);
 const showEditMenu = ref(false);
 const posMenuTop = ref(0);
 const posMenuLeft = ref(0);
+const editColumnIndex = ref(-1);
+const editBlockIndex = ref(-1);
 
 const toggleBlockButtons = (e: MouseEvent, val?: boolean) => {
   if (val !== undefined) showBlockButtons.value = val;
@@ -208,7 +230,7 @@ const openAddMenu = (e: MouseEvent, colIndex?: number, childIndex?: number) => {
   else selColAndChild.value = [-1, -1]; // -1 means add block to row (not to column
 };
 
-const openEditMenu = (e: MouseEvent) => {
+const openEditMenu = (e: MouseEvent, colIndex?: number, childIndex?: number) => {
   showAddMenu.value = false; // close other menu in this component if opened
   emitter.emit('close-other-menus', props.index); // close other menus in editor
 
@@ -217,6 +239,41 @@ const openEditMenu = (e: MouseEvent) => {
   posMenuTop.value = bottom;
   posMenuLeft.value = left;
   showEditMenu.value = true;
+  editColumnIndex.value = colIndex !== undefined ? colIndex : -1;
+  editBlockIndex.value = childIndex !== undefined ? childIndex : -1;
+};
+
+const openEditMenuInColumn = (e: MouseEvent, columnIndex: number, childIndex: number) => {
+  showAddMenu.value = false; // close other menu in this component if opened
+  emitter.emit('close-other-menus', props.index); // close other menus in editor
+
+  const node = e.target as HTMLElement;
+  const { bottom, left } = node.getBoundingClientRect();
+  posMenuTop.value = bottom;
+  posMenuLeft.value = left;
+  showEditMenu.value = true;
+  editColumnIndex.value = columnIndex;
+  editBlockIndex.value = childIndex;
+};
+
+const deleteItem = (columnIndex?: number, childIndex?: number) => {
+  if (blockVar.value.type === 'columns' && blockVar.value.data.columns) {
+    if (columnIndex !== undefined && childIndex !== undefined) {
+      // delete single item in column
+      blockVar.value.data.columns[columnIndex].data.blocks.splice(childIndex, 1);
+    } else if (columnIndex !== undefined) {
+      // delete column
+      blockVar.value.data.columns.splice(columnIndex, 1);
+    }
+  } else {
+    // delete item
+    emit('drop', props.index);
+  }
+  emit('update', { block: blockVar.value });
+};
+
+const deleteBlock = () => {
+  emit('drop', props.index);
 };
 
 let selColAndChild = ref([-1, -1]);
@@ -263,8 +320,7 @@ const marginBottom = computed(() => {
 });
 
 emitter.on('hide-controls', () => {
-  showAddMenu.value = false;
-  showEditMenu.value = false;
+  showBlockButtons.value = false;
 });
 
 emitter.on('close-other-menus', (index: any) => {
